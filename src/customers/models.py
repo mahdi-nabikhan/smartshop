@@ -1,8 +1,6 @@
 from django.db import models
-from ..accounts.models import User
-from ..website import Product
-
-
+from accounts.models import User
+from website.models import Product
 # Create your models here.
 
 
