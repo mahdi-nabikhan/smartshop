@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import DetailView
+from .models import Address
 from accounts.models import User
-from .forms import RegisterForm,AddressForm
+from .forms import RegisterForm, AddressForm
 
 
 # Create your views here.
@@ -40,3 +42,15 @@ class AddAddressView(View):
             address.save()
             return redirect('accounts:index')
         return render(request, self.template_name, {'form': form})
+
+
+class ProfileCustomer(DetailView):
+    template_name = 'profile.html'
+    model = User
+    context_object_name = 'customer'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.get_object()
+        context['addresses'] = Address.objects.filter(user=user)
+        return context
