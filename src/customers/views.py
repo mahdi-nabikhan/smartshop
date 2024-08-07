@@ -41,7 +41,7 @@ class AddAddressView(View):
             address.user = user
             address.save()
             return redirect('accounts:index')
-        return render(request, self.template_name, {'form': form})
+        return render(request, 'address.html', {'form': form})
 
 
 class ProfileCustomer(DetailView):
