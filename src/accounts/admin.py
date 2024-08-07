@@ -75,7 +75,7 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ["wide"],
-                "fields": ["email", "phone", "password1", "password2"],
+                "fields": ["email", "phone", "password1", "password2",'role'],
             },
         ),
     ]

@@ -11,4 +11,4 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(Comments)
 class CommentsAdmin(admin.ModelAdmin):
-    list_display = ('description', 'user')
+    list_display = ('descriptions', 'user')

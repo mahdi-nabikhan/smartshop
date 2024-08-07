@@ -1,21 +1,33 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import View
+from .forms import *
+
+from accounts.forms import LoginForm
 
 
 # Create your views here.
-class LoginViews(LoginView):
-    template_name = 'login.html'
+class LoginViews(View):
+    def get(self, request):
+        form = LoginForm()
+        context = {'form': form}
+        return render(request, 'login.html', context)
 
-    success_url = reverse_lazy('website:landing_page')
-
-    def form_valid(self, form):
-        user = form.get_user()
-        login(self.request, user)
-        if user.role == 'manager' or user.role == 'admin':
-            return redirect('accounts:manager', pk=user.manager.id)
-        return redirect(self.success_url)
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                if user.role == 'manager' or user.role == 'admin':
+                    return redirect('dashboards:admin_panel')
+                else:
+                    return redirect('website:landing_page')
+        return render(request, 'login.html', {'form': form})
 
 
 def logoutview(request):

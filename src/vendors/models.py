@@ -3,13 +3,18 @@ from accounts.models import User
 
 
 # Create your models here.
+class Admin(User):
+    class Meta:
+        proxy = True
+        verbose_name = 'Admin'
+        verbose_name_plural = 'Admins'
 
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='store_owner')
-    admin = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='store_admin', null=True, blank=True)
+    admin = models.ForeignKey(Admin, on_delete=models.DO_NOTHING, related_name='store_admin', null=True, blank=True)
 
 
 class StoreRate(models.Model):
