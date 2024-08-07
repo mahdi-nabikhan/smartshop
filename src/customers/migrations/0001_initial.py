@@ -16,21 +16,22 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Cart',
+            name='Comments',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.BooleanField(default=False)),
-                ('created_at', models.DateField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_cart', to=settings.AUTH_USER_MODEL)),
+                ('descriptions', models.TextField()),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='product_customer', to='website.product')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comment_customer', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
-            name='OrderDetail',
+            name='Address',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField()),
-                ('cart', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='order_cart', to='orders.cart')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='order_product', to='website.product')),
+                ('country', models.CharField(max_length=255)),
+                ('city', models.CharField(max_length=250)),
+                ('street', models.CharField(max_length=250)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='customer', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
