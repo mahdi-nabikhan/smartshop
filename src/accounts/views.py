@@ -1,5 +1,5 @@
-from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import login, logout
+from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
@@ -16,3 +16,8 @@ class LoginViews(LoginView):
         if user.role == 'manager' or user.role == 'admin':
             return redirect('accounts:manager', pk=user.manager.id)
         return redirect(self.success_url)
+
+
+def logoutview(request):
+    logout(request)
+    return redirect('website:landing_page')
