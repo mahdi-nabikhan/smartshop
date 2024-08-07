@@ -10,11 +10,20 @@ class Admin(User):
         verbose_name_plural = 'Admins'
 
 
+class Operator(User):
+    class Meta:
+        proxy = True
+        verbose_name = 'operator'
+        verbose_name_plural = 'operators'
+
+
 class Store(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='store_owner')
     admin = models.ForeignKey(Admin, on_delete=models.DO_NOTHING, related_name='store_admin', null=True, blank=True)
+    operator = models.ForeignKey(Operator, on_delete=models.DO_NOTHING, related_name='store_operator', null=True,
+                                 blank=True)
 
 
 class StoreRate(models.Model):
