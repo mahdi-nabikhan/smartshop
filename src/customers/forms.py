@@ -1,5 +1,6 @@
 from django import forms
 from accounts.models import User
+from .models import Address
 
 
 class RegisterForm(forms.ModelForm):
@@ -15,3 +16,9 @@ class RegisterForm(forms.ModelForm):
         if password != password2:
             raise forms.ValidationError('Passwords must match')
         return password2
+
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['country', 'city', 'street']
