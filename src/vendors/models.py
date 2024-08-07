@@ -8,7 +8,7 @@ class Store(models.Model):
     name=models.CharField(max_length=255)
     description=models.TextField()
     owner=models.ForeignKey(User,on_delete=models.CASCADE,related_name='store_owner')
-    admin = models.ForeignKey(User,on_delete=models.DO_NOTHING,related_name='store_admin')
+    admin = models.ForeignKey(User,on_delete=models.DO_NOTHING,related_name='store_admin',null=True,blank=True)
     products=models.ForeignKey(Product,on_delete=models.DO_NOTHING,related_name='store_product')
 
 
