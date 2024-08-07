@@ -1,4 +1,7 @@
 from django.urls import path
+from .views import *
 
-
-urlpatterns = []
+app_name = 'website'
+urlpatterns = [
+    path('', HomeView.as_view(), name='landing_page'),
+]

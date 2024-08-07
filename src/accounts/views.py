@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 class LoginViews(LoginView):
     template_name = 'login.html'
 
-    success_url = reverse_lazy('accounts:index')
+    success_url = reverse_lazy('website:landing_page')
 
     def form_valid(self, form):
         user = form.get_user()

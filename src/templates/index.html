@@ -79,11 +79,11 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 				<ul class="card">
 					<li><a href="wishlist.html" ><i class="fa fa-heart" aria-hidden="true"></i>Wishlist</a></li>
                     {% if request.user.is_authenticated%}
-					<li><a href="{% url 'accounts:profile' request.user.pk %}" ><i class="fa fa-user" aria-hidden="true"></i>{{ request.user.first_name }}</a></li>
+					<li><a href="{% url 'customers:customer_profile' request.user.pk %}" ><i class="fa fa-user" aria-hidden="true"></i>{{ request.user.first_name }}</a></li>
                         
                         {% else %}
                         <li><a href="{% url 'accounts:login' %}" ><i class="fa fa-user" aria-hidden="true"></i>login</a></li>
-                        <li><a href="{% url 'accounts:register' %}" ><i class="fa fa-arrow-right" aria-hidden="true"></i>Register</a></li>
+                        <li><a href="{% url 'customers:customer_register' %}" ><i class="fa fa-arrow-right" aria-hidden="true"></i>Register</a></li>
                     {% endif %}
 					
 					<li><a href="about.html" ><i class="fa fa-file-text-o" aria-hidden="true"></i>Order History</a></li>
