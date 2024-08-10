@@ -1,13 +1,12 @@
 from django import forms
-from accounts.models import User
-from .models import Address
+from .models import *
 
 
 class RegisterForm(forms.ModelForm):
     password2 = forms.CharField(label='Password2', max_length=100)
 
     class Meta:
-        model = User
+        model = Customer
         fields = ['first_name', 'last_name', 'phone', 'email', 'password']
 
     def clean_password2(self):

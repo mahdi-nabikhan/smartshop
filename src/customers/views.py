@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DetailView, UpdateView
-from .models import Address
-from accounts.models import User
+from .models import *
 from .forms import RegisterForm, AddressForm
 
 
@@ -21,7 +20,6 @@ class CustomerRegisterView(View):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
-            user.role = 'customer'
             user.save()
             return redirect('customers:add_address', id=user.id)
         return render(request, 'register.html', {'form': form})
@@ -35,7 +33,7 @@ class AddAddressView(View):
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, id):
-        user = User.objects.get(id=id)
+        user = Customer.objects.get(id=id)
         form = AddressForm(request.POST)
         if form.is_valid():
             address = form.save(commit=False)
@@ -59,6 +57,6 @@ class ProfileCustomer(DetailView):
 
 class UpdateCustomer(UpdateView):
     template_name = 'customer_edit_profile.html'
-    model = User
+    model = Customer
     fields = ['first_name', 'last_name', 'email', 'phone']
     success_url = reverse_lazy('website:landing_page')
