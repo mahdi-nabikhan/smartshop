@@ -10,10 +10,12 @@ from accounts.forms import LoginForm
 
 # Create your views here.
 class LoginViews(View):
+    template_name = 'login.html'
+
     def get(self, request):
         form = LoginForm()
         context = {'form': form}
-        return render(request, 'login.html', context)
+        return render(request, self.template_name, context)
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -23,11 +25,11 @@ class LoginViews(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                if user.role == 'manager' or user.role == 'admin':
+                if hasattr(user, 'managers') or hasattr(user, 'managers'):
                     return redirect('dashboards:admin_panel')
                 else:
                     return redirect('website:landing_page')
-        return render(request, 'login.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
 
 
 def logoutview(request):
