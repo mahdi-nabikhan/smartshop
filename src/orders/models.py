@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import User
+from customers.models import Customer
 from website.models import Product
 
 
@@ -7,7 +7,7 @@ from website.models import Product
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_cart')
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='user_cart')
     status = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
 
