@@ -10,7 +10,7 @@ from accounts.forms import LoginForm
 
 # Create your views here.
 class LoginViews(View):
-    template_name = 'login.html'
+    template_name = 'customer/login.html'
 
     def get(self, request):
         form = LoginForm()
