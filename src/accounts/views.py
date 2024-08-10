@@ -25,7 +25,7 @@ class LoginViews(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                if hasattr(user, 'managers') or hasattr(user, 'managers'):
+                if hasattr(user, 'managers') or hasattr(user, 'admin'):
                     return redirect('dashboards:admin_panel')
                 else:
                     return redirect('website:landing_page')

@@ -276,6 +276,8 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 					<form action="#" method="post">
                         {% csrf_token %}
 						{{ form.as_p }}
+                        {{ store_form.as_p }}
+                        {{ address_form }}
 						<input type="submit" value="Submit">
 					</form>
 				</div>
