@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import TemplateView
+from vendors.models import Store, StoreAddress
 
-
-from vendors.models import *
-
-
-# Create your views here.
+from django.shortcuts import render
+from django.views import View
+from vendors.models import Store, StoreAddress, Managers
 
 
 class ManagerProfile(View):
@@ -14,11 +12,10 @@ class ManagerProfile(View):
 
     def get(self, request):
         user = request.user
-        if request.user.role == 'admin':
-            store = Store.objects.get(admin=user)
-            address = StoreAddress.objects.filter(store=store)
-            return render(request, self.template_name, {'store': store, 'address': address})
-        elif request.user.role == 'manager':
+        is_manager = Managers.objects.filter(id=user.id).exists()
+
+        if is_manager:
             store = Store.objects.get(owner=user)
             address = StoreAddress.objects.filter(store=store)
-            return render(request, self.template_name, {'store': store,'address': address})
+            return render(request, self.template_name, {'store': store, 'addresses': address, 'is_manager': is_manager})
+        return render(request, self.template_name)

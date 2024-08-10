@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from .forms import *
-
+from vendors.models import *
 from accounts.forms import LoginForm
 
 
@@ -25,7 +25,7 @@ class LoginViews(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                if hasattr(user, 'managers') or hasattr(user, 'admin'):
+                if Managers.objects.filter(pk=user.pk):
                     return redirect('dashboards:admin_panel')
                 else:
                     return redirect('website:landing_page')
