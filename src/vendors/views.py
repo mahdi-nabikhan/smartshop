@@ -17,7 +17,7 @@ class RegisterStores(View):
         store_form = RegistrationStoreForm()
         address_form = AddressStoreForm()
         context = {'form': form, 'store_form': store_form, 'address_form': address_form}
-        return render(request, 'owner_register.html', context)
+        return render(request, 'admins/owner_register.html', context)
 
     def post(self, request):
         form = RegistrationManagerForms(request.POST)
@@ -35,7 +35,7 @@ class RegisterStores(View):
             address.save()
             return redirect('website:landing_page')
         context = {'form': form, 'store_form': store_form, 'address_form': address_form}
-        return render(request, 'owner_register.html', context)
+        return render(request, 'admins/owner_register.html', context)
 
 # class RegisterStoreView(View):
 #

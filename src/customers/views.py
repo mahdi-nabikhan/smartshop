@@ -22,7 +22,7 @@ class CustomerRegisterView(View):
             user.set_password(form.cleaned_data['password'])
             user.save()
             return redirect('customers:add_address', id=user.id)
-        return render(request, 'register.html', {'form': form})
+        return render(request, 'customer/register.html', {'form': form})
 
 
 class AddAddressView(View):
@@ -40,11 +40,11 @@ class AddAddressView(View):
             address.user = user
             address.save()
             return redirect('website:landing_page')
-        return render(request, 'address.html', {'form': form})
+        return render(request, 'customer/address.html', {'form': form})
 
 
 class ProfileCustomer(DetailView):
-    template_name = 'profile.html'
+    template_name = 'admins/profile.html'
     model = User
     context_object_name = 'customer'
 
@@ -56,7 +56,7 @@ class ProfileCustomer(DetailView):
 
 
 class UpdateCustomer(UpdateView):
-    template_name = 'customer_edit_profile.html'
+    template_name = 'customer/customer_edit_profile.html'
     model = Customer
     fields = ['first_name', 'last_name', 'email', 'phone']
     success_url = reverse_lazy('website:landing_page')
