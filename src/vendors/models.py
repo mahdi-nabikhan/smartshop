@@ -3,6 +3,14 @@ from accounts.models import User
 
 
 # Create your models here.
+
+
+class Managers(User):
+    class Meta:
+        proxy = True
+        verbose_name = 'managers'
+
+
 class Admin(User):
     class Meta:
         proxy = True
@@ -20,7 +28,7 @@ class Operator(User):
 class Store(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='store_owner')
+    owner = models.ForeignKey(Managers, on_delete=models.CASCADE, related_name='store_owner')
     admin = models.ForeignKey(Admin, on_delete=models.DO_NOTHING, related_name='store_admin', null=True, blank=True)
     operator = models.ForeignKey(Operator, on_delete=models.DO_NOTHING, related_name='store_operator', null=True,
                                  blank=True)
