@@ -8,7 +8,7 @@ from .forms import RegisterForm, AddressForm
 
 # Create your views here.
 class CustomerRegisterView(View):
-    template_name = 'register.html'
+    template_name = 'customer/register.html'
 
     def get(self, request):
         form = RegisterForm()
@@ -26,7 +26,7 @@ class CustomerRegisterView(View):
 
 
 class AddAddressView(View):
-    template_name = 'address.html'
+    template_name = 'customer/address.html'
 
     def get(self, request, id):
         form = AddressForm()
@@ -44,7 +44,7 @@ class AddAddressView(View):
 
 
 class ProfileCustomer(DetailView):
-    template_name = 'admins/profile.html'
+    template_name = 'customer/profile.html'
     model = User
     context_object_name = 'customer'
 

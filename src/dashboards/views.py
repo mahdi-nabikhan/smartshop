@@ -8,7 +8,7 @@ from vendors.models import Store, StoreAddress, Managers
 
 
 class ManagerProfile(View):
-    template_name = 'admin_panel.html'
+    template_name = 'admins/admin_panel.html'
 
     def get(self, request):
         user = request.user

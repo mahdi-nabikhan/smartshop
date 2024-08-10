@@ -10,7 +10,7 @@ from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerF
 
 
 class RegisterStores(View):
-    template_name = 'owner_register.html'
+    template_name = 'admins/owner_register.html'
 
     def get(self, request):
         form = RegistrationManagerForms()
