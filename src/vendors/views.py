@@ -72,3 +72,6 @@ class RegisterStores(View):
 #             stores.save()
 #             return redirect('website:landing_page')
 #         return render(request, 'storeaddress.html', {'form': form})
+
+
+
