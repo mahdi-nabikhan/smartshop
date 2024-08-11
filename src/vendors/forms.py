@@ -20,7 +20,7 @@ class RegistrationManagerForms(forms.ModelForm):
 class RegistrationStoreForm(forms.ModelForm):
     class Meta:
         model = Store
-        fields = ['name', 'description']
+        fields = ['name', 'description','image']
 
 
 class AddressStoreForm(forms.ModelForm):

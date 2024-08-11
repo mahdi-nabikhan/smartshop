@@ -21,7 +21,7 @@ class RegisterStores(View):
 
     def post(self, request):
         form = RegistrationManagerForms(request.POST)
-        store_form = RegistrationStoreForm(request.POST)
+        store_form = RegistrationStoreForm(request.POST, request.FILES)
         address_form = AddressStoreForm(request.POST)
         if form.is_valid() and address_form.is_valid() and store_form.is_valid():
             user = form.save(commit=False)

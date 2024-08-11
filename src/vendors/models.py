@@ -21,6 +21,7 @@ class Operator(User):
 
 
 class Store(models.Model):
+    image = models.ImageField(upload_to='store_image')
     name = models.CharField(max_length=255)
     description = models.TextField()
     owner = models.ForeignKey(Managers, on_delete=models.CASCADE, related_name='store_owner')
