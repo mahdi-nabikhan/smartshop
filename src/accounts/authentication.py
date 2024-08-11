@@ -11,7 +11,7 @@ class PhoneAuthenticationBackend(BaseBackend):
 
             return None
         except User.DoesNotExist:
-            raise ValueError('+=')
+            raise ValueError('this user DoseNot Exist ....')
 
     def get_user(self, user_id):
         try:
