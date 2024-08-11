@@ -6,23 +6,18 @@ from accounts.models import User
 
 
 class Managers(User):
-    class Meta:
-        proxy = True
-        verbose_name = 'managers'
+    is_Managers = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.first_name
 
 
 class Admin(User):
-    class Meta:
-        proxy = True
-        verbose_name = 'Admin'
-        verbose_name_plural = 'Admins'
+    is_admins = models.BooleanField(default=True)
 
 
 class Operator(User):
-    class Meta:
-        proxy = True
-        verbose_name = 'operator'
-        verbose_name_plural = 'operators'
+    is_operator = models.BooleanField(default=True)
 
 
 class Store(models.Model):

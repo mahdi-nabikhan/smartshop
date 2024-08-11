@@ -1,13 +1,14 @@
 from django.db import models
 from accounts.models import User
 from website.models import Product
+
+
 # Create your models here.
 
 
 class Customer(User):
-    class Meta:
-        proxy = True
-        verbose_name = 'Customer'
+    is_customer = models.BooleanField(default=True)
+
 
 class Address(models.Model):
     country = models.CharField(max_length=255)
@@ -22,8 +23,5 @@ class Address(models.Model):
 class Comments(models.Model):
     descriptions = models.TextField()
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='comment_customer')
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='product_customer')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_customer')
     parent = models.ForeignKey('self', null=True, blank=True, related_name='replay', on_delete=models.CASCADE)
-
-
-

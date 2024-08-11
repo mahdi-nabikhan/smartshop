@@ -24,8 +24,10 @@ class LoginViews(View):
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
             if user is not None:
+
                 login(request, user)
-                if Managers.objects.filter(pk=user.pk):
+
+                if Managers.objects.filter(id=user.id):
                     return redirect('dashboards:admin_panel')
                 else:
                     return redirect('website:landing_page')
