@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+import random
 
 
 class MyManager(BaseUserManager):
@@ -48,10 +49,34 @@ class User(AbstractBaseUser):
         return True
 
 
-class SendSMS(models.Model):
-    phone = models.CharField(max_length=13)
-    code = models.SmallIntegerField()
+class Codes(models.Model):
+    number = models.CharField(max_length=5, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.number)
+
+    def save(self, *args, **kwargs):
+        number_list = [x for x in range(10)]
+        code_items = []
+        for i in range(5):
+            num = random.choice(number_list)
+            code_items.append(num)
+        code_str = ''.join(str(item for item in code_items))
+        self.number = code_str
+        super().save(*args, **kwargs)
 
 
-    def  __str__(self):
-        self.phone
+from django.db import models
+import random
+
+
+class VerificationCode(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = str(random.randint(100000, 999999))
+        super().save(*args, **kwargs)

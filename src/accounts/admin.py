@@ -65,7 +65,7 @@ class UserAdmin(BaseUserAdmin):
 
         ("Personal info", {"fields": ["phone"]}), ("Personal info", {"fields": ["email"]}),
         ("Personal info", {"fields": ["first_name"]}), ("Personal info", {"fields": ["last_name"]}),
-        ("Personal info", {"fields": ["role"]}),
+
         ("Permissions", {"fields": ["is_admin"]}),
     ]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -87,7 +87,6 @@ class UserAdmin(BaseUserAdmin):
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
 
-
-@admin.register(SendSMS)
-class SendSMSAdmin(admin.ModelAdmin):
-    list_display = ['phone', 'code']
+@admin.register(Codes)
+class Codes(admin.ModelAdmin):
+    list_display = ('number',)
