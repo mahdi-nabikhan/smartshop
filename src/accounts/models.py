@@ -23,8 +23,6 @@ class MyManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-
-
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -49,3 +47,11 @@ class User(AbstractBaseUser):
     def has_perm(self, perm, obj=None):
         return True
 
+
+class SendSMS(models.Model):
+    phone = models.CharField(max_length=13)
+    code = models.SmallIntegerField()
+
+
+    def  __str__(self):
+        self.phone

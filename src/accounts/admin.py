@@ -75,7 +75,7 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ["wide"],
-                "fields": ["email", "phone", "password1", "password2",'role'],
+                "fields": ["email", "phone", "password1", "password2", 'role'],
             },
         ),
     ]
@@ -86,3 +86,8 @@ class UserAdmin(BaseUserAdmin):
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
+
+
+@admin.register(SendSMS)
+class SendSMSAdmin(admin.ModelAdmin):
+    list_display = ['phone', 'code']
