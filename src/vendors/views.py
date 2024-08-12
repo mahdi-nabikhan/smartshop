@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import DetailView
+
 from .models import Store
 from website.models import *
 from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerForms, AdminRegisterForm, AddProductForm
@@ -123,3 +125,9 @@ class ProductListView(View):
         products = Product.objects.filter(store=store)
         context = {'products': products}
         return render(request, 'admins/product_list.html', context)
+
+
+class ProductDetailView(DetailView):
+    template_name = 'admins/product_detail.html'
+    model = Product
+    context_object_name = 'products'

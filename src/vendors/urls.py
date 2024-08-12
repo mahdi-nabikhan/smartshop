@@ -6,6 +6,7 @@ urlpatterns = [
     path('admin_register/<int:id>/',AdminRegisterStore.as_view(),name='admin_register'),
     path('add_product/<int:id>/',AddProductView.as_view(),name='add_product'),
     path('product_list/<int:id>/',ProductListView.as_view(),name='product_list'),
+    path('product_detail/<int:pk>/',ProductDetailView.as_view(),name='product_detail'),
     # path('store_register/<int:id>',RegisterStoreView.as_view(),name='store_register'),
     # path('add_address_store/<int:id>',StoreAddressView.as_view(),name='add_address_store'),
 
