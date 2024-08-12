@@ -29,6 +29,8 @@ class LoginViews(View):
 
                 if Managers.objects.filter(id=user.id):
                     return redirect('dashboards:admin_panel')
+                elif Admin.objects.filter(id=user.id):
+                    return redirect('dashboards:admin_panel')
                 else:
                     return redirect('website:landing_page')
         return render(request, self.template_name, {'form': form})
