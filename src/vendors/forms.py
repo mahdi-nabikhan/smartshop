@@ -1,5 +1,6 @@
 from django import forms
 from .models import Store, StoreAddress, Managers, Admin
+from website.models import Product
 
 
 class RegistrationManagerForms(forms.ModelForm):
@@ -24,8 +25,6 @@ class RegistrationStoreForm(forms.ModelForm):
 
 
 class AddressStoreForm(forms.ModelForm):
-
-
     class Meta:
         model = StoreAddress
         fields = ['country', 'city', 'street']
@@ -44,3 +43,11 @@ class AdminRegisterForm(forms.ModelForm):
         if password2 != password:
             raise forms.ValidationError("Passwords don't match")
         return password2
+
+
+class AddProductForm(forms.ModelForm):
+    image = forms.ImageField()
+
+    class Meta:
+        model = Product
+        fields = ['name', 'description', 'quantity_in_stock','price','category']

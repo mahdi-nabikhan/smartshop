@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Store
-
-from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerForms, AdminRegisterForm
+from website.models import *
+from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerForms, AdminRegisterForm, AddProductForm
 
 
 # Create your views here.
@@ -92,3 +92,34 @@ class AdminRegisterStore(View):
             return redirect('dashboards:admin_panel')
         context = {'form': form}
         return render(request, 'admins/admin_register.html', context)
+
+
+class AddProductView(View):
+    template_name = 'admins/add_product.html'
+
+    def get(self, request, id):
+        form = AddProductForm()
+        context = {'form': form}
+        return render(request, 'admins/add_product.html', context)
+
+    def post(self, request, id):
+        form = AddProductForm(request.POST, request.FILES)
+        store = Store.objects.get(id=id)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.store = store
+            product.discount = 0
+            product.save()
+            ProductImages.objects.create(product=product, product_image=form.cleaned_data['image'])
+            return redirect('dashboards:admin_panel')
+        context = {'form': form}
+        return render(request, 'admins/add_product.html', context)
+
+
+class ProductListView(View):
+
+    def get(self, request, id):
+        store = Store.objects.get(id=id)
+        products = Product.objects.filter(store=store)
+        context = {'products': products}
+        return render(request, 'admins/product_list.html', context)

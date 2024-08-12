@@ -209,11 +209,15 @@
                 <li>
                     {% if is_manager %}
                     <a href="{% url 'vendors:admin_register' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Register Admin</a>
-                    {% endif %}
+                    
                 </li>
                 <li>
-                    <a href="sugerencias"><i class="fa fa-fw fa-paper-plane-o"></i> MENU 4</a>
+                    <a href="{% url 'vendors:add_product' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Add Product</a>
+                </li><li>
+                    <a href="{% url 'vendors:product_list' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Products</a>
                 </li>
+                        
+                {% endif %}
                 <li>
                     <a href="faq"><i class="fa fa-fw fa fa-question-circle"></i> MENU 5</a>
                 </li>
