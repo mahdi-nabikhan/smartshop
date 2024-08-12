@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import DetailView, DeleteView
+from django.views.generic import DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from .models import Store
 from website.models import *
 from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerForms, AdminRegisterForm, AddProductForm, \
-    AddImageForm
+    AddImageForm, UpdateProductForm
 
 
 # Create your views here.
@@ -157,3 +157,10 @@ class AddImageView(View):
             return redirect('dashboards:admin_panel')
         context ={'form':form}
         return render(request, 'admins/add_image.html', context)
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = UpdateProductForm
+    template_name = 'admins/add_product.html'
+    success_url = reverse_lazy('dashboards:admin_panel')

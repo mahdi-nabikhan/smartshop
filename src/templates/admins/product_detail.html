@@ -25,13 +25,16 @@
                 <div class="col-md-3">
                     <img width="200px" height="200px" src="{{ i.product_image.url }}" alt="{{ i.title }}">
                 <a href="{% url 'vendors:delete_image' i.pk %}">delete this image</a><br>
-                <a href="{% url 'vendors:add_image' i.id %}"> add image</a>
+                
                     
                 </div>
             {% endfor %}
         </div>
-    <p>{{ products.name }}</p> <!-- اضافه کردن نام محصول زیر هر تصویر -->
+    <p>{{ products.name }}</p>
         <p>{{ products.description }}</p>
+        <a href="{% url 'vendors:add_image' products.id %}"> add image</a><br>
+        <a href="{% url 'vendors:update_product' products.id %}"> edit</a>
+    
     <p>{{ products.price }}</p>
     </div>
 </div>

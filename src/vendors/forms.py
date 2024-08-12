@@ -57,3 +57,10 @@ class AddImageForm(forms.ModelForm):
     class Meta:
         model = ProductImages
         fields = ['product_image']
+
+
+class UpdateProductForm(forms.ModelForm):
+
+    class Meta:
+        model = Product
+        fields = ['name', 'description', 'quantity_in_stock', 'price', 'category']
