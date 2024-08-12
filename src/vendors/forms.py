@@ -1,6 +1,6 @@
 from django import forms
 from .models import Store, StoreAddress, Managers, Admin
-from website.models import Product
+from website.models import Product, ProductImages
 
 
 class RegistrationManagerForms(forms.ModelForm):
@@ -50,4 +50,10 @@ class AddProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['name', 'description', 'quantity_in_stock','price','category']
+        fields = ['name', 'description', 'quantity_in_stock', 'price', 'category']
+
+
+class AddImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImages
+        fields = ['product_image']

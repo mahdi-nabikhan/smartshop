@@ -24,7 +24,8 @@
             {% for i in products.image_for_product.all %}
                 <div class="col-md-3">
                     <img width="200px" height="200px" src="{{ i.product_image.url }}" alt="{{ i.title }}">
-                <a href="#">delete this image</a>
+                <a href="{% url 'vendors:delete_image' i.pk %}">delete this image</a><br>
+                <a href="{% url 'vendors:add_image' i.id %}"> add image</a>
                     
                 </div>
             {% endfor %}

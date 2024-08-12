@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import DetailView
-
+from django.views.generic import DetailView, DeleteView
+from django.urls import reverse_lazy
 from .models import Store
 from website.models import *
-from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerForms, AdminRegisterForm, AddProductForm
+from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerForms, AdminRegisterForm, AddProductForm, \
+    AddImageForm
 
 
 # Create your views here.
@@ -131,3 +132,28 @@ class ProductDetailView(DetailView):
     template_name = 'admins/product_detail.html'
     model = Product
     context_object_name = 'products'
+
+
+class DeleteImageView(DeleteView):
+    template_name = 'admins/image_delete.html'
+    model = ProductImages
+    success_url = reverse_lazy('dashboards:admin_panel')
+
+
+class AddImageView(View):
+
+    def get(self, request, id):
+        form = AddImageForm()
+        context = {'form': form}
+        return render(request, 'admins/add_image.html', context)
+
+    def post(self, request, id):
+        form = AddImageForm(request.POST, request.FILES)
+        product = Product.objects.get(id=id)
+        if form.is_valid():
+            image = form.save(commit=False)
+            image.product = product
+            image.save()
+            return redirect('dashboards:admin_panel')
+        context ={'form':form}
+        return render(request, 'admins/add_image.html', context)
