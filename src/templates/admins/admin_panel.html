@@ -244,6 +244,23 @@
                     {% else %}
                         <p>{{ error }}</p>
                     {% endif %}
+                {% if is_admin %}
+                        <h1>Welcome Admin!</h1>
+                        <p>first name: {{ user.first_name }}</p>
+                        <p>last name: {{ user.last_name }}</p>
+                        <p>phone: {{ user.phone }}</p>
+                        <p>email: {{ user.email }}</p>
+                        <p>store info:</p>
+                        <p>store name: {{ store.name }}</p>
+                        <p>store description: {{ store.description }}</p>
+                        <p>store address:</p>
+                        {% for address in addresses %}
+                            <p>city: {{ address.city }}</p>
+                            <p>street: {{ address.street }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>{{ error }}</p>
+                    {% endif %}
                 </div>
             </div>
             <!-- /.row -->

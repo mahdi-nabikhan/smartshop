@@ -7,6 +7,7 @@ from .forms import *
 from vendors.models import *
 from accounts.forms import LoginForm
 from django.http import HttpResponse
+from customers.models import Customer
 
 # Create your views here.
 class LoginViews(View):
@@ -30,8 +31,8 @@ class LoginViews(View):
                 if Managers.objects.filter(id=user.id):
                     return redirect('dashboards:admin_panel')
                 elif Admin.objects.filter(id=user.id):
-                    return redirect('dashboards:admin_panel')
-                else:
+                    return redirect('dashboards:admin_panel2')
+                elif Customer.objects.filter(id=user.id):
                     return redirect('website:landing_page')
         return render(request, self.template_name, {'form': form})
 

@@ -33,7 +33,7 @@ class StoreAddress(models.Model):
 
 class Admin(User):
     is_admins = models.BooleanField(default=True)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='admin')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='my_admin')
 
 
 class Operator(User):
