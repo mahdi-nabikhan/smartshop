@@ -4,8 +4,7 @@ from django.views.generic import DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from .models import Store
 from website.models import *
-from .forms import RegistrationStoreForm, AddressStoreForm, RegistrationManagerForms, AdminRegisterForm, AddProductForm, \
-    AddImageForm, UpdateProductForm
+from .forms import *
 
 
 # Create your views here.
@@ -155,7 +154,7 @@ class AddImageView(View):
             image.product = product
             image.save()
             return redirect('dashboards:admin_panel')
-        context ={'form':form}
+        context = {'form': form}
         return render(request, 'admins/add_image.html', context)
 
 
@@ -164,3 +163,17 @@ class ProductUpdateView(UpdateView):
     form_class = UpdateProductForm
     template_name = 'admins/add_product.html'
     success_url = reverse_lazy('dashboards:admin_panel')
+
+
+class UpdateStoreView(UpdateView):
+    model = Store
+    form_class = UpdateStoreForm
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/update_store.html'
+
+
+class UpdateManager(UpdateView):
+    model = Managers
+    form_class = UpdateManagersForm
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/update_managers.html'

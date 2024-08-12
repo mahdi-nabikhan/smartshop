@@ -60,7 +60,21 @@ class AddImageForm(forms.ModelForm):
 
 
 class UpdateProductForm(forms.ModelForm):
-
     class Meta:
         model = Product
         fields = ['name', 'description', 'quantity_in_stock', 'price', 'category']
+
+
+class UpdateStoreForm(forms.ModelForm):
+    class Meta:
+        model = Store
+        fields = ['name', 'description']
+
+
+class UpdateManagersForm(forms.ModelForm):
+    class Meta:
+        model = Managers
+        fields = ['first_name', 'last_name', 'email', 'phone']
+
+
+

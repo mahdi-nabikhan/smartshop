@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    
+
 </head>
 <body>
 
@@ -12,58 +12,65 @@
 <div id="throbber" style="display:none; min-height:120px;"></div>
 <div id="noty-holder"></div>
 {% block content %}
-<div id="wrapper">
-    
-  
+    <div id="wrapper">
 
-    <div id="page-wrapper">
-        <div class="container-fluid">
-            <!-- Page Heading -->
-            <div class="row" id="main">
-                <div class="col-sm-12 col-md-12 well" id="content">
-                    {% if is_manager %}
-                        <h1>Welcome Manager!</h1>
-                        <p>first name: {{ user.first_name }}</p>
-                        <p>last name: {{ user.last_name }}</p>
-                        <p>phone: {{ user.phone }}</p>
-                        <p>email: {{ user.email }}</p>
-                        <p>store info:</p>
-                        <p>store name: {{ store.name }}</p>
-                        <p>store description: {{ store.description }}</p>
-                        <p>store address:</p>
-                        {% for address in addresses %}
-                            <p>city: {{ address.city }}</p>
-                            <p>street: {{ address.street }}</p>
-                        {% endfor %}
-                    {% else %}
-                        <p>{{ error }}</p>
-                    {% endif %}
-                {% if is_admin %}
-                        <h1>Welcome Admin!</h1>
-                        <p>first name: {{ user.first_name }}</p>
-                        <p>last name: {{ user.last_name }}</p>
-                        <p>phone: {{ user.phone }}</p>
-                        <p>email: {{ user.email }}</p>
-                        <p>store info:</p>
-                        <p>store name: {{ store.name }}</p>
-                        <p>store description: {{ store.description }}</p>
-                        <p>store address:</p>
-                        {% for address in addresses %}
-                            <p>city: {{ address.city }}</p>
-                            <p>street: {{ address.street }}</p>
-                        {% endfor %}
-                    {% else %}
-                        <p>{{ error }}</p>
-                    {% endif %}
+
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="row" id="main">
+                    <div class="col-sm-12 col-md-12 well" id="content">
+                        {% if is_manager %}
+                            <h1>Welcome Manager!</h1>
+                            <p>first name: {{ user.first_name }}</p>
+                            <p>last name: {{ user.last_name }}</p>
+                            <p>phone: {{ user.phone }}</p>
+                            <p>email: {{ user.email }}</p>
+                            <a href="{% url 'vendors:update_manager' user.pk %}"> edit information</a>
+                            <hr>
+                            <p>store info:</p>
+                            <p>store name: {{ store.name }}</p>
+                            <p>store description: {{ store.description }}</p>
+                            <a href="{% url 'vendors:update_store' store.pk %}"> edit store info</a>
+                            <hr>
+                            <p>store address:</p>
+                            {% for address in addresses %}
+                                <p>city: {{ address.city }}</p>
+                                <p>street: {{ address.street }}</p>
+                            {% endfor %}
+                        {% else %}
+                            <p>{{ error }}</p>
+                        {% endif %}
+                        {% if is_admin %}
+                            <h1>Welcome Admin!</h1>
+                            <div style="border: solid black">
+                                <p>first name: {{ user.first_name }}</p>
+                                <p>last name: {{ user.last_name }}</p>
+                                <p>phone: {{ user.phone }}</p>
+                                <p>email: {{ user.email }}</p>
+                            </div>
+                            <div>
+                                <p>store info:</p>
+                                <p>store name: {{ store.name }}</p>
+                                <p>store description: {{ store.description }}</p>
+                            </div>
+                            <p>store address:</p>
+                            {% for address in addresses %}
+                                <p>city: {{ address.city }}</p>
+                                <p>street: {{ address.street }}</p>
+                            {% endfor %}
+                        {% else %}
+                            <p>{{ error }}</p>
+                        {% endif %}
+                    </div>
                 </div>
+                <!-- /.row -->
             </div>
-            <!-- /.row -->
+            <!-- /.container-fluid -->
         </div>
-        <!-- /.container-fluid -->
-    </div>
 
-    <!-- /#page-wrapper -->
-</div><!-- /#wrapper -->
+        <!-- /#page-wrapper -->
+    </div><!-- /#wrapper -->
 {% endblock content %}
 </body>
 </html>

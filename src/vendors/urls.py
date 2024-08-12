@@ -10,6 +10,8 @@ urlpatterns = [
     path('delete_image/<int:pk>/',DeleteImageView.as_view(),name='delete_image'),
     path('add_image/<int:id>/',AddImageView.as_view(),name='add_image'),
     path('update_product/<int:pk>/',ProductUpdateView.as_view(),name='update_product'),
+    path('update_store/<int:pk>/',UpdateStoreView.as_view(),name='update_store'),
+    path('update_manager/<int:pk>/',UpdateManager.as_view(),name='update_manager'),
     # path('store_register/<int:id>',RegisterStoreView.as_view(),name='store_register'),
     # path('add_address_store/<int:id>',StoreAddressView.as_view(),name='add_address_store'),
 
