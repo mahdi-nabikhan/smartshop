@@ -1,3 +1,5 @@
+
+
 from django import forms
 from .models import *
 
@@ -21,3 +23,9 @@ class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
         fields = ['country', 'city', 'street']
+
+
+class AddCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['descriptions']

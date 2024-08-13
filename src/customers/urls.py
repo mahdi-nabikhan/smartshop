@@ -10,4 +10,6 @@ urlpatterns = [
     path('customer_edit_info/<int:pk>',UpdateCustomer.as_view(), name='customer_edit_info'),
 
 
+
+
 ]

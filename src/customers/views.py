@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DetailView, UpdateView
+from django.views.generic import DetailView, UpdateView, ListView
 from .models import *
-from .forms import RegisterForm, AddressForm
+from .forms import RegisterForm, AddressForm,AddCommentForm
 
 
 # Create your views here.
@@ -60,3 +60,7 @@ class UpdateCustomer(UpdateView):
     model = Customer
     fields = ['first_name', 'last_name', 'email', 'phone']
     success_url = reverse_lazy('website:landing_page')
+
+
+
+
