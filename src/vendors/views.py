@@ -192,6 +192,6 @@ class StoreDetail(DetailView):
         paginator = Paginator(products, 4)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        context['product'] = page_obj
+        context['products'] = page_obj
         context['address'] = StoreAddress.objects.filter(store=store)
         return context

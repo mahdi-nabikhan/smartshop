@@ -206,9 +206,34 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	   		<div class="col-md-5 single-top">
 	   		<div class="single-w3agile">
 							
-<div id="picture-frame">
-			<img src='{{ store.image.url }}' data-src="images/si-1.jpg" alt="" class="img-responsive"/>
-		</div>
+<div id="picture-frame" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    {% for img in products.image_for_product.all %}
+      <li data-target="#picture-frame" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+    {% endfor %}
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    {% for img in products.image_for_product.all %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ img.product_image.url }}" alt="" class="img-responsive d-block w-100">
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Controls -->
+  <a class="carousel-control-prev" href="#picture-frame" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#picture-frame" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
 										<script src="{{ store.image.url }}"></script>
 								<script>
 			$(function() {
@@ -224,7 +249,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 			<div class="col-md-7 single-top-left ">
 								<div class="single-right">
-				<h3>Wheat</h3>
+				<h3>{{ products.name }}</h3>
 				
 					
 				 <div class="pr-single">
@@ -270,7 +295,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					</div>
 			</div>
 						<div class="con-w3l wthree-of">
-    {% for product in products %}
+    
         <div class="col-md-3 pro-1">
             <div class="col-m">
                 <a href="#" data-toggle="modal" data-target="#myModal5" class="offer-img">
@@ -289,32 +314,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <div class="clearfix"></div>
                     </div>
                     <div class="add">
-                        <button class="btn btn-danger my-cart-btn my-cart-b" ><a href="{% url 'website:product_detail' product.pk %}">Show details</a></button>
+                        <button class="btn btn-danger my-cart-btn my-cart-b" data-id="{{ product.id }}" data-name="{{ product.name }}" data-summary="summary {{ product.id }}" data-price="{{ product.discounted_price }}" data-quantity="1" data-image="{{ product.image.url }}">Add to Cart</button>
                     </div>
                 </div>
             </div>
         </div>
-    {% endfor %}
+    
     <div class="clearfix"></div>
 </div>
 
-<div class="pagination">
-    <span class="step-links">
-        {% if products.has_previous %}
-            <a href="?page=1">« first</a>
-            <a href="?page={{ products.previous_page_number }}">Previous</a>
-        {% endif %}
 
-        <span class="current">
-            pages {{ products.number }} -- {{ products.paginator.num_pages }}
-        </span>
-
-        {% if product.has_next %}
-            <a href="?page={{ products.next_page_number }}">Next</a>
-            <a href="?page={{ products.paginator.num_pages }}">END »</a>
-        {% endif %}
-    </span>
-</div>
 
 					</div>
 				</div>
@@ -765,4 +774,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					</div>
 				</div>
 </body>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('.slider').slick({
+            dots: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 1,
+            adaptiveHeight: true
+        });
+    });
+</script>
+
 {% endblock content %}
