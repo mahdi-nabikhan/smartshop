@@ -52,6 +52,7 @@ class ProfileCustomer(DetailView):
         context = super().get_context_data(**kwargs)
         user = self.get_object()
         context['addresses'] = Address.objects.filter(user=user)
+        context['comment']=Comments.objects.filter(user=user)
         return context
 
 
