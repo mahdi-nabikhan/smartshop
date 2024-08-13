@@ -59,14 +59,14 @@
 											<h6><a href="single.html">{{ i.name }}</a>(5 kg)</h6>
 										</div>
 										<div class="mid-2">
-											<p ><label>$10.00</label><em class="item_price">$9.00</em></p>
+											
 											  <div class="block">
 												<div class="starbox small ghosting"> </div>
 											</div>
 											<div class="clearfix"></div>
 										</div>
 												<div class="add">
-										   <button class="btn btn-danger my-cart-btn my-cart-b" data-id="2" data-name="Sunflower Oil" data-summary="summary 2" data-price="9.00" data-quantity="1" data-image="images/of1.png">Add to Cart</button>
+										   <button class="btn btn-danger my-cart-btn my-cart-b" data-id="2" data-name="Sunflower Oil" data-summary="summary 2" data-price="9.00" data-quantity="1" data-image="images/of1.png"><a href="{% url 'vendors:store_detail' i.pk %}">Show Detail</a></button>
 										</div>
 									</div>
 								</div>

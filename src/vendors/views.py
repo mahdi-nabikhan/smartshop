@@ -1,6 +1,7 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import DetailView, DeleteView, UpdateView
+from django.views.generic import DetailView, DeleteView, UpdateView, TemplateView
 from django.urls import reverse_lazy
 from .models import Store
 from website.models import *
@@ -177,3 +178,20 @@ class UpdateManager(UpdateView):
     form_class = UpdateManagersForm
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/update_managers.html'
+
+
+class StoreDetail(DetailView):
+    template_name = 'pages/single.html'
+    model = Store
+    context_object_name = 'store'
+
+    def get_context_data(self, **kwargs):
+        store = self.get_object()
+        context = super().get_context_data(**kwargs)
+        products = Product.objects.filter(store=store)
+        paginator = Paginator(products, 4)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['product'] = page_obj
+        context['address'] = StoreAddress.objects.filter(store=store)
+        return context
