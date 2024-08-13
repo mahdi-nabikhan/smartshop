@@ -102,16 +102,18 @@ class AddProductView(View):
 
     def get(self, request, id):
         form = AddProductForm()
-        context = {'form': form}
+        discount_form = AddDiscountForm()
+        context = {'form': form, 'discount_form': discount_form}
         return render(request, 'admins/add_product.html', context)
 
     def post(self, request, id):
         form = AddProductForm(request.POST, request.FILES)
         store = Store.objects.get(id=id)
+
         if form.is_valid():
             product = form.save(commit=False)
             product.store = store
-            product.discount = 0
+
             product.save()
             ProductImages.objects.create(product=product, product_image=form.cleaned_data['image'])
             return redirect('dashboards:admin_panel')
@@ -164,6 +166,9 @@ class ProductUpdateView(UpdateView):
     form_class = UpdateProductForm
     template_name = 'admins/add_product.html'
     success_url = reverse_lazy('dashboards:admin_panel')
+
+
+
 
 
 class UpdateStoreView(UpdateView):

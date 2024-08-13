@@ -309,7 +309,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             pages {{ products.number }} -- {{ products.paginator.num_pages }}
         </span>
 
-        {% if product.has_next %}
+        {% if products.has_next %}
             <a href="?page={{ products.next_page_number }}">Next</a>
             <a href="?page={{ products.paginator.num_pages }}">END »</a>
         {% endif %}

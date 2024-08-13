@@ -7,6 +7,16 @@ class Category(models.Model):
     title = models.CharField(max_length=250)
     image = models.ImageField(upload_to='category_image')
     description = models.TextField()
+    is_parent=models.ForeignKey('self', blank=True, null=True, related_name='parent', on_delete=models.CASCADE)
+
+
+class Discount(models.Model):
+    class DiscountType(models.TextChoices):
+        cash = 'cash', 'Cash'
+        percentage = 'percentage', 'Percentage'
+
+    discount_type = models.CharField(max_length=250, choices=DiscountType.choices)
+    value = models.IntegerField()
 
 
 class Product(models.Model):
@@ -14,7 +24,7 @@ class Product(models.Model):
     description = models.TextField()
     quantity_in_stock = models.PositiveIntegerField()
     price = models.PositiveIntegerField()
-    discount = models.PositiveIntegerField()
+    discount = models.OneToOneField(Discount, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product_category')
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='product_store')
 

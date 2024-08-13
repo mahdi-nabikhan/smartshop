@@ -1,6 +1,6 @@
 from django import forms
 from .models import Store, StoreAddress, Managers, Admin
-from website.models import Product, ProductImages
+from website.models import Product, ProductImages, Discount
 
 
 class RegistrationManagerForms(forms.ModelForm):
@@ -62,7 +62,20 @@ class AddImageForm(forms.ModelForm):
 class UpdateProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'quantity_in_stock', 'price', 'category']
+        fields = ['name', 'description', 'quantity_in_stock', 'price', 'category', 'discount']
+
+    def save(self, commit=True):
+        product = super().save(commit=False)
+        if product.discount:
+            if product.discount.discount_type == 'cash':
+                product.price -= product.discount.value
+            elif product.discount.discount_type == 'percentage':
+                product.price -= product.price * (product.discount.value / 100)
+        if commit:
+            product.save()
+        return product
+
+
 
 
 class UpdateStoreForm(forms.ModelForm):
@@ -77,4 +90,7 @@ class UpdateManagersForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'phone']
 
 
-
+class AddDiscountForm(forms.ModelForm):
+    class Meta:
+        model = Discount
+        fields = '__all__'

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImages, ProductRate
+from .models import Category, Product, ProductImages, ProductRate,Discount
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -26,3 +26,8 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductImages, ProductImagesAdmin)
 admin.site.register(ProductRate, ProductRateAdmin)
+
+
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ('discount_type', 'value')
