@@ -78,7 +78,7 @@ class RegisterStores(View):
 #             return redirect('website:landing_page')
 #         return render(request, 'storeaddress.html', {'form': form})
 
-@method_decorator(manager_required, name='dispatch')
+@method_decorator(is_manager, name='dispatch')
 class AdminRegisterStore(View):
 
     def get(self, request, id):
@@ -99,10 +99,8 @@ class AdminRegisterStore(View):
         return render(request, 'admins/admin_register.html', context)
 
 
-@method_decorator(admin_required, name='dispatch')
-@method_decorator(manager_required,name='dispatch')
+@method_decorator(admin_or_manager_required, name='dispatch')
 class AddProductView(View):
-
     template_name = 'admins/add_product.html'
 
     def get(self, request, id):
@@ -141,14 +139,14 @@ class ProductDetailView(DetailView):
     context_object_name = 'products'
 
 
-@method_decorator(manager_required or admin_required, name='dispatch')
+@method_decorator(admin_or_manager_required, name='dispatch')
 class DeleteImageView(DeleteView):
     template_name = 'admins/image_delete.html'
     model = ProductImages
     success_url = reverse_lazy('dashboards:admin_panel')
 
 
-@method_decorator(manager_required or admin_required, name='dispatch')
+@method_decorator(admin_or_manager_required, name='dispatch')
 class AddImageView(View):
 
     def get(self, request, id):
@@ -168,7 +166,7 @@ class AddImageView(View):
         return render(request, 'admins/add_image.html', context)
 
 
-@method_decorator(manager_required or admin_required, name='dispatch')
+@method_decorator(admin_or_manager_required, name='dispatch')
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = UpdateProductForm
@@ -176,7 +174,7 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('dashboards:admin_panel')
 
 
-@method_decorator(manager_required, name='dispatch')
+@method_decorator(is_manager, name='dispatch')
 class UpdateStoreView(UpdateView):
     model = Store
     form_class = UpdateStoreForm
@@ -184,7 +182,7 @@ class UpdateStoreView(UpdateView):
     template_name = 'admins/update_store.html'
 
 
-@method_decorator(manager_required, name='dispatch')
+@method_decorator(is_manager, name='dispatch')
 class UpdateManager(UpdateView):
     model = Managers
     form_class = UpdateManagersForm
@@ -207,3 +205,34 @@ class StoreDetail(DetailView):
         context['products'] = page_obj
         context['address'] = StoreAddress.objects.filter(store=store)
         return context
+
+
+class UpdateDiscount(UpdateView):
+    model = Discount
+    form_class = AddDiscountForm
+    context_object_name = 'discount'
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/update_discount.html'
+
+
+class AddDiscountView(View):
+    def get(self, request):
+        form = AddDiscountForm()
+        context = {'form': form}
+        return render(request, 'admins/add_discount.html', context)
+
+    def post(self, request):
+        form = AddDiscountForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('dashboards:admin_panel')
+        return render(request, '', {'form': form})
+
+
+class DeleteDiscountView(DeleteView):
+    model = Discount
+    context_object_name = 'discount'
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/delete_discount.html'
+
