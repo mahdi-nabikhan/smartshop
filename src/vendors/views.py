@@ -258,4 +258,9 @@ class RegisterOperator(View):
 
 
 class AdminListView(View):
-    def get(self,re):
+    def get(self, request, id):
+        store = Store.objects.get(id=id)
+        admin = Admin.objects.filter(store=store)
+        context = {'admin': admin}
+        return render(request, 'admins/admin_list.html', context)
+

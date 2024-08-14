@@ -68,7 +68,9 @@
                     <a href="{% url 'vendors:operator_register' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Operator Register</a>
                     
                 </li>
-                        
+                          <li>
+                    <a href="{% url 'vendors:admin_list' store.id  %}"><i class="fa fa-fw fa-paper-plane-o"></i>Admins</a>
+                </li>
                         
                 {% endif %}
             {% if is_admin %}
@@ -81,7 +83,7 @@
                 
                     
                     <a href="{% url 'vendors:operator_register' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Operator Register</a>
-                    
+                    <a href="{% url 'vendors:admin_list' store.id  %}"><i class="fa fa-fw fa-paper-plane-o"></i>Admins</a>
                 </li>
                     
                 </li>
