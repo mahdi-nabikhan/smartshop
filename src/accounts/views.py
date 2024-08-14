@@ -74,5 +74,5 @@ class VerifyCodeView(View):
                 login(request, user)
                 return redirect('website:landing_page')
             else:
-                return HttpResponse("کد تایید نادرست است.")
+                return HttpResponse("wrong pass word.")
         return render(request, 'verify_code.html', {'form': form, 'phone_number': phone_number})

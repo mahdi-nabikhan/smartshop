@@ -1,5 +1,5 @@
 from django import forms
-from .models import Store, StoreAddress, Managers, Admin
+from .models import Store, StoreAddress, Managers, Admin, Operator
 from website.models import Product, ProductImages, Discount
 
 
@@ -76,8 +76,6 @@ class UpdateProductForm(forms.ModelForm):
         return product
 
 
-
-
 class UpdateStoreForm(forms.ModelForm):
     class Meta:
         model = Store
@@ -94,3 +92,18 @@ class AddDiscountForm(forms.ModelForm):
     class Meta:
         model = Discount
         fields = '__all__'
+
+
+class RegisterOperators(forms.ModelForm):
+    password2 = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = Operator
+        fields = ['first_name', 'last_name', 'email', 'phone', 'password']
+
+    def clean_password2(self):
+        password2 = self.cleaned_data.get('password2')
+        password = self.cleaned_data.get('password')
+        if password2 != password:
+            raise forms.ValidationError("Passwords don't match")
+        return password2

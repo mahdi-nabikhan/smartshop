@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import DetailView, DeleteView, UpdateView, TemplateView
+from django.views.generic import DetailView, DeleteView, UpdateView, TemplateView, ListView
 from django.urls import reverse_lazy
 from .models import Store
 from website.models import *
@@ -237,5 +237,25 @@ class DeleteDiscountView(DeleteView):
     template_name = 'admins/delete_discount.html'
 
 
+class RegisterOperator(View):
+
+    def get(self, request, id):
+        form = RegisterOperators()
+        context = {'form': form}
+        return render(request, 'admins/operator_register.html', context)
+
+    def post(self, request, id):
+        store = Store.objects.get(id=id)
+        form = RegisterOperators(request.POST)
+        if form.is_valid():
+            operator = form.save(commit=False)
+            operator.set_password(form.cleaned_data['password'])
+            operator.store = store
+            operator.save()
+            return redirect('dashboards:admin_panel')
+        context = {'form': form}
+        return render(request, 'admins/operator_register.html', context)
 
 
+class AdminListView(View):
+    def get(self,re):

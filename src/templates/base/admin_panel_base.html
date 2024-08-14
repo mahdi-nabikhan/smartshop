@@ -49,16 +49,26 @@
                         <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.3</a></li>
                     </ul>
                 </li>
+               {% if is_manager %}
                 <li>
-                    {% if is_manager %}
+                
+                    
                     <a href="{% url 'vendors:admin_register' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Register Admin</a>
                     
                 </li>
                 <li>
                     <a href="{% url 'vendors:add_product' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Add Product</a>
-                </li><li>
+                </li>
+                        <li>
                     <a href="{% url 'vendors:product_list' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Products</a>
                 </li>
+                   <li>
+                
+                    
+                    <a href="{% url 'vendors:operator_register' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Operator Register</a>
+                    
+                </li>
+                        
                         
                 {% endif %}
             {% if is_admin %}
@@ -66,6 +76,12 @@
                     <a href="{% url 'vendors:add_product' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Add Product</a>
                 </li><li>
                     <a href="{% url 'vendors:product_list' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Products</a>
+                </li>
+                  <li>
+                
+                    
+                    <a href="{% url 'vendors:operator_register' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Operator Register</a>
+                    
                 </li>
                     
                 </li>
