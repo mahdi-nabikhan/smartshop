@@ -68,13 +68,13 @@ class UpdateProductForm(forms.ModelForm):
         product = super().save(commit=False)
         if product.discount:
             if product.discount.discount_type == 'cash':
-                product.price -= product.discount.value
+                product.price_after = product.price - product.discount.value
             elif product.discount.discount_type == 'percentage':
-                product.price -= product.price * (product.discount.value / 100)
+                product.price_after = max(0, product.price - (product.price * (product.discount.value // 100)))
+
         if commit:
             product.save()
         return product
-
 
 class UpdateStoreForm(forms.ModelForm):
     class Meta:

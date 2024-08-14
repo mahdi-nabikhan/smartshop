@@ -216,17 +216,30 @@ class UpdateDiscount(UpdateView):
 
 @method_decorator(admin_or_manager_required, name='dispatch')
 class AddDiscountView(View):
-    def get(self, request):
+    def get(self, request,id):
         form = AddDiscountForm()
         context = {'form': form}
         return render(request, 'admins/add_discount.html', context)
 
-    def post(self, request):
+    def post(self, request,id):
         form = AddDiscountForm(request.POST)
+        product = Product.objects.get(id=id)
 
         if form.is_valid():
-            form.save()
-            return redirect('dashboards:admin_panel')
+            discount=form.save()
+            product.discount=discount
+            if product.discount:
+                if product.discount.discount_type == 'cash':
+                    product.price_after = product.price - product.discount.value
+                    product.save()
+                    return redirect('dashboards:admin_panel')
+                elif product.discount.discount_type == 'percentage':
+                    product.price_after = max(0, product.price - (product.price * (product.discount.value // 100)))
+                    product.save()
+                    return redirect('dashboards:admin_panel')
+                else:
+                    product.save()
+                    return redirect('dashboards:admin_panel')
         return render(request, '', {'form': form})
 
 
@@ -288,3 +301,4 @@ class DeleteOperatorView(DeleteView):
     model = Operator
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/delete_discount.html'
+

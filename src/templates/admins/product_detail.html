@@ -30,24 +30,31 @@
         </div><p></p>
     <p>name : {{ products.name }}</p>
         <p>descriptions : {{ products.description }}</p>
+        <p>price:{{ products.price }}</p><hr>
         {% if products.discount %}
             {% if products.discount.discount_type == 'cash' %}
                 <p> discount type : {{ products.discount.discount_type }}</p>
                 <p>discount value :{{ products.discount.value }} $</p>
+                <p>price after discount : {{ products.price_after }}</p>
                 
                 {% else %}
                 <p>discount type : {{ products.discount.discount_type }}</p>
-                <p>discount value : {{ products.discount.value }}%</p>
+                <p>discount value : {{ products.discount.value }}</p>
+                <p>price after discount : {{ products.price_after }}</p>
                 {% endif %}
             {% else %}
             <p> discount : this product not have discount</p>
             
         {% endif %}
-    <p>price:{{ products.price }}</p><hr>
+    
         <a href="{% url 'vendors:add_image' products.id %}"> add image</a><br>
         <a href="{% url 'vendors:update_product' products.id %}"> edit</a><br>
+        {% if products.discount %}
         <a href="{% url 'vendors:update_discounts' products.discount.pk %}"> Edit Discount</a><br>
         <a href="{% url 'vendors:delete_discount' products.discount.pk %}"> Delete Discount</a><br>
+            {% else %}
+            <a href="{% url 'vendors:add_discount' products.id %}"> Add Discount</a><br>
+    {% endif %}
     
     
     </div>
