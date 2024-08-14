@@ -6,6 +6,8 @@ from django.urls import reverse_lazy
 from .models import Store
 from website.models import *
 from .forms import *
+from .permissions import *
+from django.utils.decorators import method_decorator
 
 
 # Create your views here.
@@ -76,7 +78,7 @@ class RegisterStores(View):
 #             return redirect('website:landing_page')
 #         return render(request, 'storeaddress.html', {'form': form})
 
-
+@method_decorator(manager_required, name='dispatch')
 class AdminRegisterStore(View):
 
     def get(self, request, id):
@@ -97,6 +99,7 @@ class AdminRegisterStore(View):
         return render(request, 'admins/admin_register.html', context)
 
 
+@method_decorator(manager_required or admin_required, name='dispatch')
 class AddProductView(View):
     template_name = 'admins/add_product.html'
 
@@ -136,12 +139,16 @@ class ProductDetailView(DetailView):
     context_object_name = 'products'
 
 
+@method_decorator(manager_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class DeleteImageView(DeleteView):
     template_name = 'admins/image_delete.html'
     model = ProductImages
     success_url = reverse_lazy('dashboards:admin_panel')
 
 
+@method_decorator(manager_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class AddImageView(View):
 
     def get(self, request, id):
@@ -161,6 +168,8 @@ class AddImageView(View):
         return render(request, 'admins/add_image.html', context)
 
 
+@method_decorator(manager_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = UpdateProductForm
@@ -168,9 +177,7 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('dashboards:admin_panel')
 
 
-
-
-
+@method_decorator(manager_required, name='dispatch')
 class UpdateStoreView(UpdateView):
     model = Store
     form_class = UpdateStoreForm
@@ -178,6 +185,7 @@ class UpdateStoreView(UpdateView):
     template_name = 'admins/update_store.html'
 
 
+@method_decorator(manager_required, name='dispatch')
 class UpdateManager(UpdateView):
     model = Managers
     form_class = UpdateManagersForm
