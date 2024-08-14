@@ -1,13 +1,17 @@
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views import View
-from .forms import *
-from vendors.models import *
-from accounts.forms import LoginForm
+from django.contrib.auth import login
+from django.contrib.auth import logout, authenticate
 from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.views.generic.edit import FormView
+
+from accounts.forms import LoginForm
 from customers.models import Customer
+from vendors.models import *
+from .forms import PhoneNumberForm
+from .forms import VerificationCodeForm
+from .models import VerificationCode, User
+
 
 # Create your views here.
 class LoginViews(View):
@@ -28,10 +32,9 @@ class LoginViews(View):
 
                 login(request, user)
 
-                if Managers.objects.filter(id=user.id):
+                if Managers.objects.filter(id=user.id) or Admin.objects.filter(id=user.id):
                     return redirect('dashboards:admin_panel')
-                elif Admin.objects.filter(id=user.id):
-                    return redirect('dashboards:admin_panel2')
+
                 elif Customer.objects.filter(id=user.id):
                     return redirect('website:landing_page')
         return render(request, self.template_name, {'form': form})
@@ -41,20 +44,6 @@ def logoutview(request):
     logout(request)
     return redirect('website:landing_page')
 
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import VerificationCode, User
-from .forms import PhoneNumberForm
-
-from django.views.generic.edit import FormView
-from django.shortcuts import get_object_or_404, redirect
-from .models import VerificationCode, User
-from .forms import PhoneNumberForm
-
-from django.views.generic.edit import FormView
-from django.shortcuts import get_object_or_404, redirect
-from .models import VerificationCode, User
-from .forms import PhoneNumberForm
 
 class SendVerificationCodeView(FormView):
     template_name = 'send_code.html'
@@ -68,12 +57,6 @@ class SendVerificationCodeView(FormView):
         print(f"Verification code for {user.phone}: {verification_code.code}")
         return redirect('accounts:verify_code', phone_number=phone_number)
 
-
-from django.views import View
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import login
-from .models import VerificationCode, User
-from .forms import VerificationCodeForm
 
 class VerifyCodeView(View):
     def get(self, request, phone_number):
@@ -93,4 +76,3 @@ class VerifyCodeView(View):
             else:
                 return HttpResponse("کد تایید نادرست است.")
         return render(request, 'verify_code.html', {'form': form, 'phone_number': phone_number})
-

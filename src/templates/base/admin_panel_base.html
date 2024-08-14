@@ -61,9 +61,15 @@
                 </li>
                         
                 {% endif %}
+            {% if is_admin %}
                 <li>
-                    <a href="faq"><i class="fa fa-fw fa fa-question-circle"></i> MENU 5</a>
+                    <a href="{% url 'vendors:add_product' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Add Product</a>
+                </li><li>
+                    <a href="{% url 'vendors:product_list' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Products</a>
                 </li>
+                    
+                </li>
+            {% endif %}
             </ul>
         </div>
         <!-- /.navbar-collapse -->
