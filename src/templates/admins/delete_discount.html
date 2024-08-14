@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>My Register Form</title>
+    <title>My Register Form</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
 </head>
 <body>
 
 
 <div class="container">
-<div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header">Register</div>
-                            <div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Register</div>
+                <div class="card-body">
+                    <h3> Do You Want Delete This </h3>
+                    <form class="form-horizontal" method="post" action="#">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-primary btn-lg btn-block login-button" value="Delete">
 
-                                <form class="form-horizontal" method="post" action="#">
-                                    {% csrf_token  %}
-                                    {{ form.as_p}}
-                                   
-                                     <input type="submit" class="btn btn-primary btn-lg btn-block login-button" value="Add Image">
-                                   
-                                </form>
-                            </div>
-
-                        </div>
-                    </div>
+                    </form>
                 </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

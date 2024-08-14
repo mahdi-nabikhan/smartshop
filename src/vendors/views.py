@@ -206,7 +206,7 @@ class StoreDetail(DetailView):
         context['address'] = StoreAddress.objects.filter(store=store)
         return context
 
-
+@method_decorator(admin_or_manager_required, name='dispatch')
 class UpdateDiscount(UpdateView):
     model = Discount
     form_class = AddDiscountForm
@@ -214,7 +214,7 @@ class UpdateDiscount(UpdateView):
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/update_discount.html'
 
-
+@method_decorator(admin_or_manager_required, name='dispatch')
 class AddDiscountView(View):
     def get(self, request):
         form = AddDiscountForm()
@@ -230,6 +230,7 @@ class AddDiscountView(View):
         return render(request, '', {'form': form})
 
 
+@method_decorator(admin_or_manager_required, name='dispatch')
 class DeleteDiscountView(DeleteView):
     model = Discount
     context_object_name = 'discount'
@@ -257,6 +258,7 @@ class RegisterOperator(View):
         return render(request, 'admins/operator_register.html', context)
 
 
+@method_decorator(is_manager, name='dispatch')
 class AdminListView(View):
     def get(self, request, id):
         store = Store.objects.get(id=id)
@@ -265,12 +267,14 @@ class AdminListView(View):
         return render(request, 'admins/admin_list.html', context)
 
 
+@method_decorator(is_manager, name='dispatch')
 class DeleteAdminView(DeleteView):
     model = Admin
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/delete_discount.html'
 
 
+@method_decorator(is_manager, name='dispatch')
 class OperatorListView(View):
     def get(self, request, id):
         store = Store.objects.get(id=id)
@@ -279,6 +283,7 @@ class OperatorListView(View):
         return render(request, 'admins/admin_list.html', context)
 
 
+@method_decorator(is_manager, name='dispatch')
 class DeleteOperatorView(DeleteView):
     model = Operator
     success_url = reverse_lazy('dashboards:admin_panel')
