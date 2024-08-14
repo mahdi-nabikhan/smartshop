@@ -32,11 +32,13 @@ class LoginViews(View):
 
                 login(request, user)
 
-                if Managers.objects.filter(id=user.id) or Admin.objects.filter(id=user.id):
+                if Managers.objects.filter(id=user.id).exists() or Admin.objects.filter(
+                        id=user.id).exists() or Operator.objects.filter(id=user.id).exists():
                     return redirect('dashboards:admin_panel')
 
                 elif Customer.objects.filter(id=user.id):
                     return redirect('website:landing_page')
+
         return render(request, self.template_name, {'form': form})
 
 

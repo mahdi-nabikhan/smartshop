@@ -41,13 +41,14 @@
         <ul class="nav navbar-nav side-nav">
 
             <li>
-                <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-star"></i> MENU 2
-                    <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                <ul id="submenu-2" class="collapse">
-                    <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.1</a></li>
-                    <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.2</a></li>
-                    <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.3</a></li>
-                </ul>
+{#                <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-star"></i> MENU 2#}
+{#                    <i class="fa fa-fw fa-angle-down pull-right"></i></a>#}
+{#                <ul id="submenu-2" class="collapse">#}
+{#                    <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.1</a></li>#}
+{#                    <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.2</a></li>#}
+{#                    <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.3</a></li>#}
+{#                </ul>#}
+                <a href="{% url 'dashboards:admin_panel' %}"><i class="fa fa-fw fa-user-plus"></i>Panel</a>
             </li>
             {% if is_manager %}
                 <li>
@@ -99,6 +100,12 @@
 
                 </li>
             {% endif %}
+        {% if is_operator %}
+             <li>
+                    <a href="{% url 'vendors:product_list' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Products</a>
+                </li>
+            
+        {% endif %}
         </ul>
     </div>
     <!-- /.navbar-collapse -->
