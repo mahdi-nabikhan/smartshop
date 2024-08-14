@@ -264,3 +264,22 @@ class AdminListView(View):
         context = {'admin': admin}
         return render(request, 'admins/admin_list.html', context)
 
+
+class DeleteAdminView(DeleteView):
+    model = Admin
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/delete_discount.html'
+
+
+class OperatorListView(View):
+    def get(self, request, id):
+        store = Store.objects.get(id=id)
+        admin = Operator.objects.filter(store=store)
+        context = {'admin': admin}
+        return render(request, 'admins/admin_list.html', context)
+
+
+class DeleteOperatorView(DeleteView):
+    model = Operator
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/delete_discount.html'
