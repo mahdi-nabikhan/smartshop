@@ -45,8 +45,13 @@
               
               {% for i in addresses %}
               <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-                <p class="mb-0">{{ i.city }}</p>
+                <div style="display: block">
+                <p class="mb-0">country : {{ i.country }}</p><br>
+                <p class="mb-0">city : {{ i.city}}</p><br>
+                <p class="mb-0">street : {{ i.street }}</p><br>
+              <a href="{% url 'customers:edit_address' i.pk %}"> edit</a><hr>
+              </div>
+                
               </li>
                 {% endfor %}
             </ul>

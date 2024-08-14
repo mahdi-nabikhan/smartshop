@@ -63,5 +63,12 @@ class UpdateCustomer(UpdateView):
     success_url = reverse_lazy('website:landing_page')
 
 
+class UpdateAddress(UpdateView):
+    model = Address
+    template_name = 'customer/address_edit.html'
+    form_class = AddressForm
+    success_url = reverse_lazy('website:landing_page')
+    context_object_name = 'form'
+
 
 

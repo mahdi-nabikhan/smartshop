@@ -74,6 +74,10 @@ class VerifyCodeView(View):
 
             if verification_code:
                 login(request, user)
+                if Managers.objects.filter(id=user.id).exists() or Admin.objects.filter(
+                        id=user.id).exists() or Operator.objects.filter(id=user.id).exists():
+                    return redirect('dashboards:admin_panel')
+
                 return redirect('website:landing_page')
             else:
                 return HttpResponse("wrong pass word.")
