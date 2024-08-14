@@ -210,7 +210,7 @@ class StoreDetail(DetailView):
 class UpdateDiscount(UpdateView):
     model = Discount
     form_class = AddDiscountForm
-    context_object_name = 'discount'
+    context_object_name = 'form'
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/update_discount.html'
 
@@ -235,4 +235,7 @@ class DeleteDiscountView(DeleteView):
     context_object_name = 'discount'
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/delete_discount.html'
+
+
+
 

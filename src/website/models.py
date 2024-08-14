@@ -24,7 +24,7 @@ class Product(models.Model):
     description = models.TextField()
     quantity_in_stock = models.PositiveIntegerField()
     price = models.PositiveIntegerField()
-    discount = models.OneToOneField(Discount, on_delete=models.SET_NULL, null=True)
+    discount = models.OneToOneField(Discount, on_delete=models.SET_NULL, null=True,blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product_category')
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='product_store')
 

@@ -12,7 +12,10 @@ urlpatterns = [
     path('update_product/<int:pk>/',ProductUpdateView.as_view(),name='update_product'),
     path('update_store/<int:pk>/',UpdateStoreView.as_view(),name='update_store'),
     path('update_manager/<int:pk>/',UpdateManager.as_view(),name='update_manager'),
-    path('store_detail/<int:pk>/',StoreDetail.as_view(),name='store_detail')
+    path('store_detail/<int:pk>/',StoreDetail.as_view(),name='store_detail'),
+    path('add_discounts/',AddDiscountView.as_view(),name='add_discount'),
+    path('update_discount/<int:pk>/',UpdateDiscount.as_view(),name='update_discounts'),
+    path('delete_discount/<int:pk>/',DeleteDiscountView.as_view(),name='delete_discount')
     # path('store_register/<int:id>',RegisterStoreView.as_view(),name='store_register'),
     # path('add_address_store/<int:id>',StoreAddressView.as_view(),name='add_address_store'),
 
