@@ -112,11 +112,9 @@ class AddProductView(View):
     def post(self, request, id):
         form = AddProductForm(request.POST, request.FILES)
         store = Store.objects.get(id=id)
-
         if form.is_valid():
             product = form.save(commit=False)
             product.store = store
-
             product.save()
             ProductImages.objects.create(product=product, product_image=form.cleaned_data['image'])
             return redirect('dashboards:admin_panel')

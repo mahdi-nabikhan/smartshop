@@ -254,13 +254,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 {#					<a href="{% url 'customers:add_comments'  products.id%}"> add comment</a>#}
 				 <div class="pr-single">
-				  <p class="reduced "><del>$10.00</del>$5.00</p>
+                     {% if products.price_after %}
+				  <p class="reduced "><del>price : {{ products.price }}</del>price after discount : {{ products.price_after }}</p>
+                         {% else %}
+                          <p class="reduced ">price : {{ products.price }}</p>
+                     {% endif %}
 				</div>
 				<div class="block block-w3">
 					<div class="starbox small ghosting"> </div>
 				</div>
-				<p class="in-pa">{{ products.description }}</p>
-			   	<p> price : {{ products.price }}</p>
+				<p class="in-pa">description : {{ products.description }}</p>
+			   	
 				<ul class="social-top">
 					<li><a href="#" class="icon facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span></span></a></li>
 					<li><a href="#" class="icon twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span></span></a></li>
