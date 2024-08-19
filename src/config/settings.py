@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'vendors.apps.VendorsConfig',
     'customers.apps.CustomersConfig',
     'dashboards.apps.DashboardsConfig',
+    'rest_framework'
 
 
 
