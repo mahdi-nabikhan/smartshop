@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ['id', 'username']
+        fields = ['id', 'first_name']
 
 
 class CartSerializer(serializers.ModelSerializer):

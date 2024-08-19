@@ -1,4 +1,6 @@
-from django.urls import path
+from django.urls import path,include
 
 app_name = 'orders'
-urlpatterns = []
+urlpatterns = [
+    path('',include('orders.api.urls'),name='api_urls')
+]
