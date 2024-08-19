@@ -8,8 +8,9 @@
 			</div>
 			<div class="head-t">
 				<ul class="card">
-					<li><a href="{% url 'customers:add_address' request.user.id %}"> Add Address</a></li>
+{#					<li><a href="{% url 'customers:add_address' request.user.id %}"> Add Address</a></li>#}
                     {% if request.user.is_authenticated%}
+
 					<li><a href="{% url 'customers:customer_profile' request.user.pk %}" ><i class="fa fa-user" aria-hidden="true"></i>{{ request.user.first_name }}</a></li>
                         <li><a href="{% url 'accounts:logout'%}" ><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
 
