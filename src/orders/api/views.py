@@ -16,7 +16,7 @@ class CartItemAPIView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             customer = Customer.objects.get(id=request.user.id)
-            print(customer)
+
             cart_items = OrderDetail.objects.filter(cart__user=customer)
             serializer = CartItemSerializer(cart_items, many=True)
             return Response(serializer.data)
@@ -81,9 +81,10 @@ class CartItemAPIView(APIView):
 
 def cart_items_view(request):
     if request.user.is_authenticated:
-        print(request.user)
-        return render(request, 'cart_items.html')
+        cart=Cart.objects.get(user=request.user,status=False)
+        return render(request, 'cart_items.html',{'cart':cart})
     else:
+
         cart_items = request.session.get('cart_items', [])
         cart_items = [
             {
@@ -100,13 +101,13 @@ def cart_items_view(request):
 def finalize_cart(request):
     cart_items = request.session.get('cart_items', [])
     if cart_items:
-        customer = Customer.objects.get(id=request.user.id)
-        cart = Cart.objects.get_or_create(user=customer)[0]
+        cart = Cart.objects.get_or_create(user=request.user)[0]
+
         for item in cart_items:
             product = Product.objects.get(id=item['product_id'])
             OrderDetail.objects.create(cart=cart, product=product, quantity=item['quantity'])
         del request.session['cart_items']
-    return redirect('cart_items_view')
+    return redirect('orders:api:cart_items_view')
 
 
 from django.http import JsonResponse

@@ -32,6 +32,12 @@
         {% endif %}
     </div>
     <div id="error-message"></div>
+    {% if user.is_authenticated %}
+         <a  href="{% url 'orders:customer_bill' cart.id %}">go</a> 
+        {% else %}
+       <a  href="{% url 'orders:api:login' %}">add</a> 
+        
+    {% endif %}
     
 
     <script>
