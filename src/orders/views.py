@@ -12,6 +12,7 @@ from customers.models import *
 class CustomerBill(View):
     def get(self, request, id):
         cart = Cart.objects.get(id=id)
+        
         cart_item = OrderDetail.objects.filter(cart=cart)
         context = {'details': cart_item}
         return render(request, 'customer/bill.html', context)
