@@ -272,7 +272,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<li><a href="#" class="icon dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i><span></span></a></li>
 				</ul>
 					<div class="add add-3">
-										   <button class="btn btn-danger my-cart-btn my-cart-b" data-id="1" data-name="Wheat" data-summary="summary 1" data-price="6.00" data-quantity="1" data-image="images/si.jpg">Add to Cart</button>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <input class="btn btn-danger my-cart-btn my-cart-b" data-id="1" data-name="Wheat" data-summary="summary 1" data-price="6.00" data-quantity="1" data-image="images/si.jpg" type="submit" value="Add to cart">
+                            
+                        </form>
+{#										   <button >Add to Cart</button>#}
 										</div>
 
 
