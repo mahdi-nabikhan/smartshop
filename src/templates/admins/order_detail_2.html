@@ -1,0 +1,44 @@
+{% extends 'base/admin_panel_base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+
+<div id="throbber" style="display:none; min-height:120px;"></div>
+<div id="noty-holder"></div>
+{% block content %}
+    <div id="wrapper">
+
+
+        <div id="page-wrapper">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row" id="main">
+            <div class="col-sm-12 col-md-12 well" id="content">
+                <div class="row">
+                   
+                    <p>product name : {{ order_detail.product.name }}</p><br>
+                    <p> orders status : {{ order_detail.status }}</p><br>
+                    <p> order quantity : {{ order_detail.quantity }}</p><br>
+                    <p> total price :{{ total }}</p>
+                    
+                </div>
+                <a href="{% url 'vendors:order_updated' order_detail.pk %}"> edit </a>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+        <!-- /#page-wrapper -->
+    </div><!-- /#wrapper -->
+{% endblock content %}
+</body>
+</html>

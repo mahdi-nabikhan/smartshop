@@ -21,7 +21,11 @@ urlpatterns = [
     path('admin_list/<int:id>/', AdminListView.as_view(), name='admin_list'),
     path('delete_admin/<int:pk>/', DeleteAdminView.as_view(), name='admin_delete'),
     path('operator_list/<int:id>/', OperatorListView.as_view(), name='operator_list'),
-    path('operator_delete/<int:pk>/',DeleteOperatorView.as_view(),name='operator_delete')
+    path('operator_delete/<int:pk>/',DeleteOperatorView.as_view(),name='operator_delete'),
+    path('order_detail_list/<int:id>/', ListOrderDetails.as_view(), name='order_detail_list'),
+    path('order_detail/<int:pk>/',DetailOrderDetails.as_view(), name='order_detail'),
+    path('order_updated/<int:pk>/',OrderDetailUpdated.as_view(),name='order_updated'),
+
 
     # path('store_register/<int:id>',RegisterStoreView.as_view(),name='store_register'),
     # path('add_address_store/<int:id>',StoreAddressView.as_view(),name='add_address_store'),

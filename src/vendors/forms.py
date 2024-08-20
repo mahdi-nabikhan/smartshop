@@ -1,7 +1,7 @@
 from django import forms
 from .models import Store, StoreAddress, Managers, Admin, Operator
 from website.models import Product, ProductImages, Discount
-
+from orders.models import OrderDetail
 
 class RegistrationManagerForms(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput)
@@ -107,3 +107,9 @@ class RegisterOperators(forms.ModelForm):
         if password2 != password:
             raise forms.ValidationError("Passwords don't match")
         return password2
+
+
+class OrderDetailForm(forms.ModelForm):
+    class Meta:
+        model = OrderDetail
+        fields = ['status']

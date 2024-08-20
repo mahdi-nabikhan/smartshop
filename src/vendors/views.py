@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.db.models import F
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import DetailView, DeleteView, UpdateView, TemplateView, ListView
@@ -8,6 +9,7 @@ from website.models import *
 from .forms import *
 from .permissions import *
 from django.utils.decorators import method_decorator
+from orders.models import *
 
 
 # Create your views here.
@@ -204,6 +206,7 @@ class StoreDetail(DetailView):
         context['address'] = StoreAddress.objects.filter(store=store)
         return context
 
+
 @method_decorator(admin_or_manager_required, name='dispatch')
 class UpdateDiscount(UpdateView):
     model = Discount
@@ -212,20 +215,21 @@ class UpdateDiscount(UpdateView):
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/update_discount.html'
 
+
 @method_decorator(admin_or_manager_required, name='dispatch')
 class AddDiscountView(View):
-    def get(self, request,id):
+    def get(self, request, id):
         form = AddDiscountForm()
         context = {'form': form}
         return render(request, 'admins/add_discount.html', context)
 
-    def post(self, request,id):
+    def post(self, request, id):
         form = AddDiscountForm(request.POST)
         product = Product.objects.get(id=id)
 
         if form.is_valid():
-            discount=form.save()
-            product.discount=discount
+            discount = form.save()
+            product.discount = discount
             if product.discount:
                 if product.discount.discount_type == 'cash':
                     product.price_after = product.price - product.discount.value
@@ -300,3 +304,38 @@ class DeleteOperatorView(DeleteView):
     success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/delete_discount.html'
 
+
+# views.py
+
+class ListOrderDetails(View):
+    def get(self, request, id):
+        store = Store.objects.get(id=id)
+        orders = OrderDetail.objects.filter(product__store=store)
+        context = {
+            'orders': orders
+        }
+        return render(request, 'admins/order_details.html', context)
+
+
+# urls.py
+
+from django.db.models import F
+from django.shortcuts import render
+from django.views import View
+
+
+class DetailOrderDetails(View):
+    template_name = 'admins/order_detail_2.html'
+
+    def get(self, request, pk):
+        order_detail = OrderDetail.objects.filter(pk=pk).annotate(result=F('product__price') * F('quantity')).first()
+        context = {'order_detail': order_detail, 'total': order_detail.result if order_detail else 0}
+        return render(request, 'admins/order_detail_2.html', context)
+
+
+class OrderDetailUpdated(UpdateView):
+    model = OrderDetail
+    form_class = OrderDetailForm
+    success_url = reverse_lazy('dashboards:admin_panel')
+    context_object_name = 'forms'
+    template_name = 'admins/order_update.html'

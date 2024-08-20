@@ -49,8 +49,15 @@
 {#                    <li><a href="#"><i class="fa fa-angle-double-right"></i> SUBMENU 2.3</a></li>#}
 {#                </ul>#}
                 <a href="{% url 'dashboards:admin_panel' %}"><i class="fa fa-fw fa-user-plus"></i>Panel</a>
+               
             </li>
             {% if is_manager %}
+                 <li>
+
+
+                    <a href="{% url 'vendors:order_detail_list' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Orders</a>
+
+                </li>
                 <li>
 
 
@@ -58,6 +65,7 @@
                         Admin</a>
 
                 </li>
+               
                 <li>
                     <a href="{% url 'vendors:add_product' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Add
                         Product</a>
@@ -79,6 +87,8 @@
                 <li>
                     <a href="{% url 'vendors:operator_list' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Operator</a>
                 </li>
+                {% else %}
+                
 
             {% endif %}
             {% if is_admin %}
@@ -97,15 +107,27 @@
                     <a href="{% url 'vendors:admin_list' store.id %}"><i
                             class="fa fa-fw fa-paper-plane-o"></i>Admins</a>
                 </li>
+                 <li>
 
+
+                    <a href="{% url 'vendors:order_detail_list' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Orders</a>
+
+                </li>
                 </li>
             {% endif %}
         {% if is_operator %}
              <li>
                     <a href="{% url 'vendors:product_list' store.id %}"><i class="fa fa-fw fa-paper-plane-o"></i>Products</a>
+             
                 </li>
-            
+             <li>
+
+
+                    <a href="{% url 'vendors:order_detail_list' store.id %}"><i class="fa fa-fw fa-user-plus"></i>Orders</a>
+
+                </li>
         {% endif %}
+        
         </ul>
     </div>
     <!-- /.navbar-collapse -->
