@@ -13,8 +13,12 @@ class Cart(models.Model):
 
 
 class OrderDetail(models.Model):
-    cart=models.ForeignKey(Cart,on_delete=models.CASCADE,related_name='order_cart')
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='order_product')
+    class Status(models.TextChoices):
+        pending = 'P', 'Pending'
+        confirmed = 'C', 'Confirmed'
+        rejected = 'R', 'Rejected'
+
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='order_cart')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_product')
     quantity = models.PositiveIntegerField()
-
-
+    status = models.CharField(choices=Status.choices, default=Status.pending, max_length=20)
