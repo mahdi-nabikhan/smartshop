@@ -17,7 +17,7 @@ class Address(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer')
 
     def __str__(self):
-        return f"{self.user} {self.country} {self.city}"
+        return f" {self.country} {self.city}"
 
 
 class Comments(models.Model):

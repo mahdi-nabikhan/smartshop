@@ -1,12 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% for i in details %}
-    {{  i.product.name}}
-{% endfor %}
-</body>
-</html>
+<!-- templates/customer/bill.html -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Bill</button>
+</form>
+
+<h2>Order Details</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in order_details %}
+        <tr>
+            <td>{{ order.product.name }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.product.price }}</td>
+            <td>{{ order.total_price}}</td>
+            <td>{{ order.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+    <p> total price : {{ total_price }}</p>
+    </tbody>
+</table>

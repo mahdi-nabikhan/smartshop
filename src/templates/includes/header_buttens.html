@@ -20,7 +20,7 @@
                     {% endif %}
 
 					<li><a href="about.html" ><i class="fa fa-file-text-o" aria-hidden="true"></i>Order History</a></li>
-					<li><a href="shipping.html" ><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
+					<li><a href="{% url 'orders:api:cart_items_view' %}" ><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
 				</ul>
 			</div>
 

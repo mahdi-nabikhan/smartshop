@@ -1,5 +1,5 @@
 from django.db import models
-from customers.models import Customer
+from customers.models import Customer, Address
 from website.models import Product
 
 
@@ -22,3 +22,15 @@ class OrderDetail(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_product')
     quantity = models.PositiveIntegerField()
     status = models.CharField(choices=Status.choices, default=Status.pending, max_length=20)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    def get_total_price(self):
+        return self.quantity * self.product.price
+    def save(self, *args, **kwargs):
+        self.total_price = self.get_total_price()
+        return super(OrderDetail, self).save(*args, **kwargs)
+
+class Bill(models.Model):
+    cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='bill_cart')
+    created_at = models.DateField(auto_now_add=True)
+    address = models.OneToOneField(Address, on_delete=models.CASCADE, related_name='bill_address')

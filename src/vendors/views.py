@@ -11,6 +11,10 @@ from .permissions import *
 from django.utils.decorators import method_decorator
 from orders.models import *
 
+from django.db.models import F
+from django.shortcuts import render
+from django.views import View
+
 
 # Create your views here.
 
@@ -318,10 +322,6 @@ class ListOrderDetails(View):
 
 
 # urls.py
-
-from django.db.models import F
-from django.shortcuts import render
-from django.views import View
 
 
 class DetailOrderDetails(View):

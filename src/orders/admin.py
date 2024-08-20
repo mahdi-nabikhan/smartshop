@@ -16,3 +16,6 @@ class OrderDetailAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OrderDetail, OrderDetailAdmin)
+@admin.register(Bill)
+class BillAdmin(admin.ModelAdmin):
+    list_display = ('cart','address')

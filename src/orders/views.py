@@ -1,7 +1,10 @@
+from django.db.models import F, Sum
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
+from django.shortcuts import render, redirect
 
+from .forms import AddressSelectionForm
 from .models import *
 from customers.models import *
 
@@ -9,13 +12,29 @@ from customers.models import *
 # Create your views here.
 
 
-class CustomerBill(View):
-    def get(self, request, id):
-        cart = Cart.objects.get(id=id)
-        
-        cart_item = OrderDetail.objects.filter(cart=cart)
-        context = {'details': cart_item}
-        return render(request, 'customer/bill.html', context)
+# views.py
 
-    def post(self, request, id):
-        pass
+
+class CreateBillView(View):
+    template_name = 'customer/bill.html'
+
+    def get(self, request,id):
+        form = AddressSelectionForm(user=request.user)
+        cart = Cart.objects.get(id=id)
+        orders = OrderDetail.objects.filter(cart=cart,status='C')
+        cart2 = orders.annotate(result=F('product__price') * F('quantity'))
+        total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
+        return render(request, self.template_name, {'order_details':orders,'form': form,'total_price':total_price},)
+
+    def post(self, request,id):
+        form = AddressSelectionForm(request.POST, user=request.user)
+        cart = Cart.objects.get(id=id)  # Assuming there's an open cart
+        orders = OrderDetail.objects.filter(cart=cart)
+
+        if form.is_valid():
+            address = form.cleaned_data['address']
+
+            bill = Bill.objects.create(cart=cart, address=address)
+
+            return redirect('website:landing_page')  # Redirect to a success page or bill detail page
+        return render(request, self.template_name, {'order_details':orders,'form': form})
