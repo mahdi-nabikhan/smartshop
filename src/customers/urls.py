@@ -11,7 +11,8 @@ urlpatterns = [
     path('order_detail/',SeeOrderDetail.as_view(),name = 'order_details'),
     path('order_detail/rejected/',SeeOrderDetailRejected.as_view(),name = 'order_details_rejected'),
     path('order_detail/comfied/',SeeOrderDetailRejected.as_view(),name = 'order_details_comfied'),
-    path('order_details/<int:pk>/',OrderDetailDetailView.as_view(),name='detail_detail')
+    path('order_details/<int:pk>/',OrderDetailDetailView.as_view(),name='detail_detail'),
+    path('cart_details/<int:id>/',CartDetails.as_view(),name='cart_detail')
 
 
 

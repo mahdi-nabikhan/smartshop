@@ -67,11 +67,16 @@ class ProductDetailView(View):
             cart_item = form.save(commit=False)
             cart_item.product = product
             if request.user.is_authenticated:
-                cart = Cart.objects.filter(user=request.user).first()
-                if not cart:
-                    cart = Cart.objects.create(user=request.user)
-                cart_item.cart = cart
-                cart_item.save()
+                my_cart = Cart.objects.filter(user=request.user,status=False).first()
+                if my_cart:
+
+                    cart_item.cart = my_cart
+                    cart_item.save()
+                else:
+                    customer=Customer.objects.get(id=request.user.id)
+                    new=Cart.objects.create(user=customer)
+                    cart_item.cart=new
+                    cart_item.save()
             else:
                 cart_items = request.session.get('cart_items', [])
                 cart_items.append({

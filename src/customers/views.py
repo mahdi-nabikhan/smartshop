@@ -1,3 +1,4 @@
+from django.db.models import Sum, F
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -46,7 +47,7 @@ class AddAddressView(View):
 
 class ProfileCustomer(DetailView):
     template_name = 'customer/profile.html'
-    model = User
+    model = Customer
     context_object_name = 'customer'
 
     def get_context_data(self, **kwargs):
@@ -54,6 +55,7 @@ class ProfileCustomer(DetailView):
         user = self.get_object()
         context['addresses'] = Address.objects.filter(user=user)
         context['comment'] = Comments.objects.filter(user=user)
+        context['bill'] = Bill.objects.filter(cart__user=user)
         return context
 
 
@@ -94,3 +96,13 @@ class OrderDetailDetailView(DetailView):
     model = OrderDetail
     template_name = 'customer/seeorderdetails.html'
     context_object_name = 'orders'
+
+
+class CartDetails(View):
+    def get(self, request, id):
+        cart=Cart.objects.get(id=id,status=True)
+        order=OrderDetail.objects.filter(cart=cart,status='c',processed=True)
+        cart2 = order.annotate(result=F('product__price') * F('quantity'))
+        total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
+        context={'orders':order,'total_price':total_price}
+        return render(request,'customer/cart_details.html',context)

@@ -49,5 +49,7 @@ class PeyBill(View):
         orders = OrderDetail.objects.filter(cart=cart, status='C', processed=False)
 
         orders.update(processed=True)
+        cart.status=True
+        cart.save()
 
         return redirect('website:landing_page')
