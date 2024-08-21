@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 from vendors.models import *
@@ -7,6 +7,8 @@ from customers.models import Comments, Customer
 from customers.forms import AddCommentForm
 from orders.models import *
 from .forms import *
+
+
 # Create your views here.
 
 
@@ -45,13 +47,18 @@ class ProductDetailView(View):
 
     def get(self, request, id):
         product = Product.objects.get(id=id)
+        comments = Comments.objects.filter(product=product)
         form = QuantityForm()
-        context = {'products': product, 'form': form}
+        add_comment = AddCommentForm()
+        context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments}
         return render(request, self.template_name, context)
 
     def post(self, request, id):
         form = QuantityForm(request.POST)
+        add_comments = AddCommentForm(request.POST)
+        customer = Customer.objects.get(pk=request.user.pk)
         product = Product.objects.get(id=id)
+        comments = Comments.objects.filter(product=product)
         if form.is_valid():
             cart_item = form.save(commit=False)
             cart_item.product = product
@@ -68,5 +75,13 @@ class ProductDetailView(View):
                     'quantity': cart_item.quantity
                 })
                 request.session['cart_items'] = cart_items
-        context = {'products': product, 'form': form}
+
+        if add_comments.is_valid():
+            add_comments.save(commit=False)
+            add_comments.instance.product = product
+            add_comments.instance.user = customer
+            add_comments.save()
+            return redirect('website:product_detail', id=product.id)
+
+        context = {'products': product, 'form': form, 'add_comments': add_comments, 'comments': comments}
         return render(request, self.template_name, context)
