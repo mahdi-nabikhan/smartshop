@@ -43,6 +43,17 @@ class ProductImages(models.Model):
         return f'{self.title} {self.product.name}'
 
 
+from django.db.models import Sum
+
 class ProductRate(models.Model):
     rate = models.PositiveIntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_rate')
+    total_rate = models.PositiveIntegerField(null=True,blank=True)
+
+    def save(self, *args, **kwargs):
+        self.total_rate = self.get_total_rate()
+        return super().save(*args,**kwargs)
+
+    def get_total_rate(self):
+        total = ProductRate.objects.filter(product=self.product).aggregate(total=Sum('rate'))['total']
+        return total

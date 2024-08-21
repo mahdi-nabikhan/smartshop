@@ -1,3 +1,5 @@
+import http
+
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
@@ -50,7 +52,9 @@ class ProductDetailView(View):
         comments = Comments.objects.filter(product=product)
         form = QuantityForm()
         add_comment = AddCommentForm()
-        context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments}
+        can_rate=OrderDetail.objects.filter(product=product,cart__user=Customer.objects.get(id=request.user.id))
+        total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(ProductRate.objects.filter(product=product))
+        context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments, 'can_rate': can_rate,'total_rate':total_rate}
         return render(request, self.template_name, context)
 
     def post(self, request, id):
@@ -85,3 +89,35 @@ class ProductDetailView(View):
 
         context = {'products': product, 'form': form, 'add_comments': add_comments, 'comments': comments}
         return render(request, self.template_name, context)
+
+
+class AddProductRate(View):
+
+    def get(self, request, id):
+        customer = Customer.objects.get(id=request.user.id)
+        order = OrderDetail.objects.filter(cart__user=customer)
+        product = Product.objects.get(id=id)
+        form = AddRatingForm()
+        context = {
+            'order': order,
+            'product': product,
+            'form': form
+        }
+        return render(request, 'customer/rate_products.html', context)
+
+    def post(self, request, id):
+        customer = Customer.objects.get(id=request.user.id)
+        order = OrderDetail.objects.filter(cart__user=customer)
+        product = Product.objects.get(id=id)
+        form = AddRatingForm(request.POST)
+        if form.is_valid():
+            rate = form.save(commit=False)
+            rate.product = product
+            rate.save()
+            return redirect('website:product_detail', id=product.id)
+        context = {
+            'order': order,
+            'product': product,
+            'form': form
+        }
+        return render(request, 'customer/rate_products.html', context)
