@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+                   <img src="{{ orders.product.image_for_product.first.product_image.url }}" class="img-responsive" alt="{{ product.name }}">
+<p>name : {{ orders.product.name }}</p>
+<p>quantity : {{ orders.quantity }}</p><br>
+<p>status : {{ orders.status }}</p><br>
+<p> total price : {{ orders.total_price }}</p>
+<p>{{ orders.processed }}</p>
+</body>
+</html>

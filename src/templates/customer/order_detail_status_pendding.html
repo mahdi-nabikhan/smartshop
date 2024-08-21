@@ -257,6 +257,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <p>quantity : {{ order.quantity }}</p><br>
                         <p>status : {{ order.status }}</p><br>
                         <p> total price : {{ order.total_price }}</p>
+                        <a href="{% url 'customers:detail_detail' order.pk %}"> details</a>
                         
                         <div class="block">
                             <div class="starbox small ghosting"></div>

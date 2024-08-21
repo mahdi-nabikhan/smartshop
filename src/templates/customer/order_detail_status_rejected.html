@@ -236,8 +236,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<ul class="nav tabs ">
 					  <li ><a href="{% url 'customers:order_details' %}" >Pending</a></li>
 					  <li ><a href="{% url 'customers:order_details_rejected' %}" >Rejected</a></li> 
-					  <li ><a href="#tab3" data-toggle="tab">Fruits & Vegetables</a></li>  
-					  <li><a href="#tab4" data-toggle="tab">Breakfast & Cereal</a></li>
+					  <li ><a href={% url 'customers:order_details_comfied' %} >Confirmed</a></li>  
+					  
 					</ul>
 				</nav>
 						<div class="con-w3l wthree-of">
@@ -257,6 +257,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <p>quantity : {{ order.quantity }}</p><br>
                         <p>status : {{ order.status }}</p><br>
                         <p> total price : {{ order.total_price }}</p>
+                        <a href="{% url 'customers:detail_detail' order.pk %}"> details</a>
                         
                         <div class="block">
                             <div class="starbox small ghosting"></div>

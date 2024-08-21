@@ -83,7 +83,14 @@ class SeeOrderDetailRejected(ListView):
     template_name = 'customer/order_detail_status_pendding.html'
     context_object_name = 'orders'
 
+
 class SeeOrderDetailComformed(ListView):
     queryset = OrderDetail.objects.filter(status='C')
     template_name = 'customer/order_derail_status_comfied.html'
+    context_object_name = 'orders'
+
+
+class OrderDetailDetailView(DetailView):
+    model = OrderDetail
+    template_name = 'customer/seeorderdetails.html'
     context_object_name = 'orders'
