@@ -1,7 +1,6 @@
 from django.urls import path
 
-from customers.views import CustomerRegisterView, AddAddressView, ProfileCustomer,UpdateCustomer,UpdateAddress
-
+from customers.views import *
 app_name = 'customers'
 urlpatterns = [
     path('customer_register/', CustomerRegisterView.as_view(), name='customer_register'),
@@ -9,6 +8,10 @@ urlpatterns = [
     path('customer_profile/<int:pk>',ProfileCustomer.as_view(), name='customer_profile'),
     path('customer_edit_info/<int:pk>',UpdateCustomer.as_view(), name='customer_edit_info'),
     path('edit_address/<int:pk>',UpdateAddress.as_view(), name='edit_address'),
+    path('order_detail/',SeeOrderDetail.as_view(),name = 'order_details'),
+    path('order_detail/rejected/',SeeOrderDetailRejected.as_view(),name = 'order_details_rejected'),
+    path('order_detail/comfied/',SeeOrderDetailRejected.as_view(),name = 'order_details_comfied'),
+
 
 
 

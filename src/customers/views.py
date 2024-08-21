@@ -3,7 +3,8 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DetailView, UpdateView, ListView
 from .models import *
-from .forms import RegisterForm, AddressForm,AddCommentForm
+from .forms import RegisterForm, AddressForm, AddCommentForm
+from orders.models import *
 
 
 # Create your views here.
@@ -52,7 +53,7 @@ class ProfileCustomer(DetailView):
         context = super().get_context_data(**kwargs)
         user = self.get_object()
         context['addresses'] = Address.objects.filter(user=user)
-        context['comment']=Comments.objects.filter(user=user)
+        context['comment'] = Comments.objects.filter(user=user)
         return context
 
 
@@ -71,4 +72,18 @@ class UpdateAddress(UpdateView):
     context_object_name = 'form'
 
 
+class SeeOrderDetail(ListView):
+    queryset = OrderDetail.objects.filter(status='P')
+    template_name = 'customer/order_detail_status_pendding.html'
+    context_object_name = 'orders'
 
+
+class SeeOrderDetailRejected(ListView):
+    queryset = OrderDetail.objects.filter(status='R')
+    template_name = 'customer/order_detail_status_pendding.html'
+    context_object_name = 'orders'
+
+class SeeOrderDetailComformed(ListView):
+    queryset = OrderDetail.objects.filter(status='C')
+    template_name = 'customer/order_derail_status_comfied.html'
+    context_object_name = 'orders'

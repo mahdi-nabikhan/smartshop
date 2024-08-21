@@ -206,52 +206,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	   		<div class="col-md-5 single-top">
 	   		<div class="single-w3agile">
 							
-<div id="picture-frame">
-			<img src='{{ store.image.url }}' data-src="images/si-1.jpg" alt="" class="img-responsive"/>
-		</div>
-										<script src="{{ store.image.url }}"></script>
-								<script>
-			$(function() {
-				$("#picture-frame").zoomToo({
-					magnify: 1
-				});
-			});
-		</script>
-		
-		
-		
-			</div>
-			</div>
-			<div class="col-md-7 single-top-left ">
-								<div class="single-right">
-				<h3>{{ store.name }}</h3>
-				
-					
-				 <div class="pr-single">
-				  
-				</div>
-				<div class="block block-w3">
-					<div class="starbox small ghosting"> </div>
-				</div>
-				<p class="in-pa">{{ store.description }} </p>
-			   	
-				<ul class="social-top">
-					<li><a href="#" class="icon facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span></span></a></li>
-					<li><a href="#" class="icon twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span></span></a></li>
-					<li><a href="#" class="icon pinterest"><i class="fa fa-pinterest-p" aria-hidden="true"></i><span></span></a></li>
-					<li><a href="#" class="icon dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i><span></span></a></li>
-				</ul>
-					<div class="add add-3">
-										   <button class="btn btn-danger my-cart-btn my-cart-b" data-id="1" data-name="Wheat" data-summary="summary 1" data-price="6.00" data-quantity="1" data-image="images/si.jpg">Add to Cart</button>
-										</div>
-				
-				 
-			   
-			<div class="clearfix"> </div>
-			</div>
-		 
 
+		
+		
 			</div>
+			</div>
+			
 		   <div class="clearfix"> </div>
 	   </div>	
 				 
@@ -272,34 +232,39 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		</div>
 			<div class="tab-head ">
 				<nav class="nav-sidebar">
+                    
 					<ul class="nav tabs ">
-					  <li class="active"><a href="#tab1" data-toggle="tab">Staples</a></li>
-					  <li class=""><a href="#tab2" data-toggle="tab">Snacks</a></li> 
-					  <li class=""><a href="#tab3" data-toggle="tab">Fruits & Vegetables</a></li>  
-					  <li class=""><a href="#tab4" data-toggle="tab">Breakfast & Cereal</a></li>
+					  <li ><a href="{% url 'customers:order_details' %}" >Pending</a></li>
+					  <li ><a href="{% url 'customers:order_details_rejected' %}" >Rejected</a></li> 
+					  <li ><a href={% url 'customers:order_details_comfied' %} >Confirmed</a></li>  
+					  
 					</ul>
 				</nav>
 						<div class="con-w3l wthree-of">
-    {% for product in products %}
+    {% for order in orders %}
         <div class="col-md-3 pro-1">
             <div class="col-m">
                 <a href="#" data-toggle="modal" data-target="#myModal5" class="offer-img">
-                    <img src="{{ product.image_for_product.first.product_image.url }}" class="img-responsive" alt="{{ product.name }}">
+                    <img src="{{ order.product.image_for_product.first.product_image.url }}" class="img-responsive" alt="{{ product.name }}">
                     <div class="offer"><p><span>Offer</span></p></div>
                 </a>
                 <div class="mid-1">
                     <div class="women">
-                        <h6><a href="single.html">{{ product.name }}</a>({{ product.weight }} g)</h6>
+                        <h6><a href="single.html">name :{{ order.product.name }}</a></h6>
                     </div>
                     <div class="mid-2">
-                        <p><label>${{ product.original_price }}</label><em class="item_price">${{ product.discounted_price }}</em></p>
+                        <p><label>price: ${{ order.product.price }}</label><em class="item_price">${{ order.product.discounted_price }}</em></p><br>
+                        <p>quantity : {{ order.quantity }}</p><br>
+                        <p>status : {{ order.status }}</p><br>
+                        <p> total price : {{ order.total_price }}</p>
+                        
                         <div class="block">
                             <div class="starbox small ghosting"></div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
                     <div class="add">
-                        <button class="btn btn-danger my-cart-btn my-cart-b" ><a href="{% url 'website:product_detail' product.pk %}">Show details</a></button>
+{#                        <button class="btn btn-danger my-cart-btn my-cart-b" ><a href="{% url 'website:product_detail' product.pk %}">Show details</a></button>#}
                     </div>
                 </div>
             </div>
