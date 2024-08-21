@@ -37,3 +37,4 @@ class Bill(models.Model):
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='bill_cart')
     created_at = models.DateField(auto_now_add=True)
     address = models.OneToOneField(Address, on_delete=models.CASCADE, related_name='bill_address')
+    status=models.BooleanField(default=False)

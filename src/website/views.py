@@ -53,8 +53,15 @@ class ProductDetailView(View):
         form = QuantityForm()
         add_comment = AddCommentForm()
         can_rate=OrderDetail.objects.filter(product=product,cart__user=Customer.objects.get(id=request.user.id))
-        total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(ProductRate.objects.filter(product=product))
-        context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments, 'can_rate': can_rate,'total_rate':total_rate}
+        rate=ProductRate.objects.filter(product=product)
+        if rate:
+            total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(ProductRate.objects.filter(product=product))
+            context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments, 'can_rate': can_rate,'total_rate':total_rate}
+            return render(request, self.template_name, context)
+
+        context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments,
+                   'can_rate': can_rate,}
+
         return render(request, self.template_name, context)
 
     def post(self, request, id):

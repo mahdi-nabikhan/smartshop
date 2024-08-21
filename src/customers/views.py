@@ -82,7 +82,7 @@ class SeeOrderDetail(ListView):
 
 class SeeOrderDetailRejected(ListView):
     queryset = OrderDetail.objects.filter(status='R')
-    template_name = 'customer/order_detail_status_pendding.html'
+    template_name = 'customer/order_detail_status_rejected.html'
     context_object_name = 'orders'
 
 
@@ -101,8 +101,9 @@ class OrderDetailDetailView(DetailView):
 class CartDetails(View):
     def get(self, request, id):
         cart=Cart.objects.get(id=id,status=True)
-        order=OrderDetail.objects.filter(cart=cart,status='c',processed=True)
+        order=OrderDetail.objects.filter(cart=cart,status='C',processed=True)
         cart2 = order.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
         context={'orders':order,'total_price':total_price}
+        print(context)
         return render(request,'customer/cart_details.html',context)
