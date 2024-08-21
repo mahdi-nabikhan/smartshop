@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from .serializers import CartItemSerializer
 
 
@@ -17,7 +18,7 @@ class CartItemAPIView(APIView):
         if request.user.is_authenticated:
             customer = Customer.objects.get(id=request.user.id)
 
-            cart_items = OrderDetail.objects.filter(cart__user=customer)
+            cart_items = OrderDetail.objects.filter(cart__user=customer,processed=False)
             serializer = CartItemSerializer(cart_items, many=True)
             return Response(serializer.data)
         else:
@@ -110,8 +111,7 @@ def finalize_cart(request):
     return redirect('orders:api:cart_items_view')
 
 
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+
 
 
 @login_required

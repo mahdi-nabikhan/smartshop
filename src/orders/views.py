@@ -18,15 +18,16 @@ from customers.models import *
 class CreateBillView(View):
     template_name = 'customer/bill.html'
 
-    def get(self, request,id):
+    def get(self, request, id):
         form = AddressSelectionForm(user=request.user)
         cart = Cart.objects.get(id=id)
-        orders = OrderDetail.objects.filter(cart=cart,status='C')
+        orders = OrderDetail.objects.filter(cart=cart, status='C', processed=False)
         cart2 = orders.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
-        return render(request, self.template_name, {'order_details':orders,'form': form,'total_price':total_price},)
+        return render(request, self.template_name,
+                      {'order_details': orders, 'form': form, 'total_price': total_price, 'cart': cart}, )
 
-    def post(self, request,id):
+    def post(self, request, id):
         form = AddressSelectionForm(request.POST, user=request.user)
         cart = Cart.objects.get(id=id)  # Assuming there's an open cart
         orders = OrderDetail.objects.filter(cart=cart)
@@ -36,5 +37,17 @@ class CreateBillView(View):
 
             bill = Bill.objects.create(cart=cart, address=address)
 
-            return redirect('website:landing_page')  # Redirect to a success page or bill detail page
-        return render(request, self.template_name, {'order_details':orders,'form': form})
+        return render(request, self.template_name, {'order_details': orders, 'form': form, 'cart': cart}, )
+
+
+class PeyBill(View):
+    template_name = 'customer/bill.html'
+
+    def post(self, request, id):
+        cart = Cart.objects.get(id=id)
+        bill = Bill.objects.get(cart=cart)
+        orders = OrderDetail.objects.filter(cart=cart, status='C', processed=False)
+
+        orders.update(processed=True)
+
+        return redirect('website:landing_page')
