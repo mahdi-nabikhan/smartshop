@@ -29,7 +29,12 @@ class CartSerializer(serializers.ModelSerializer):
         return response
 
 
-class CartItemSerializer(serializers.ModelSerializer):
+class CartItemSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    number = serializers.IntegerField()
+
+
+class CartItemSerializer2(serializers.ModelSerializer):
     class Meta:
         model = OrderDetail
         fields = '__all__'
@@ -42,3 +47,8 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         return obj.image.url
+
+
+class ProductDetailSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    number = serializers.IntegerField()

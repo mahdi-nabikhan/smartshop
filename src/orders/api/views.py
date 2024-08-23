@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .serializers import CartItemSerializer
+from .serializers import CartItemSerializer, CartItemSerializer2
 
 
 class CartItemAPIView(APIView):
@@ -18,8 +18,8 @@ class CartItemAPIView(APIView):
         if request.user.is_authenticated:
             customer = Customer.objects.get(id=request.user.id)
 
-            cart_items = OrderDetail.objects.filter(cart__user=customer,processed=False)
-            serializer = CartItemSerializer(cart_items, many=True)
+            cart_items = OrderDetail.objects.filter(cart__user=customer, processed=False)
+            serializer = CartItemSerializer2(cart_items, many=True)
             return Response(serializer.data)
         else:
             cart_items = request.session.get('cart_items', [])
@@ -45,7 +45,7 @@ class CartItemAPIView(APIView):
             try:
                 customer = Customer.objects.get(id=request.user.id)
                 cart_item = OrderDetail.objects.get(id=id, cart__user=customer)
-                serializer = CartItemSerializer(cart_item, data=request.data, partial=True)
+                serializer = CartItemSerializer2(cart_item, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data)
@@ -62,28 +62,34 @@ class CartItemAPIView(APIView):
             return Response(status=status.HTTP_200_OK)
 
     def post(self, request):
-        if request.user.is_authenticated:
-            customer = Customer.objects.get(id=request.user.id)
-            cart = Cart.objects.get_or_create(user=customer)[0]
-            product = Product.objects.get(id=request.data['product_id'])
-            cart_item = OrderDetail.objects.create(cart=cart, product=product, quantity=request.data['quantity'])
-            serializer = CartItemSerializer(cart_item)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer = CartItemSerializer(data=request.data)
+        print(request.data)
+        customer = Customer.objects.get(id=request.user.id)
+        cart = Cart.objects.filter(user=customer, status=False).first()
+
+        if serializer.is_valid():
+            product_id = serializer.validated_data.get('id')
+            quantity = serializer.validated_data.get('number')
+            my_product = Product.objects.get(id=product_id)
+            order = OrderDetail(product=my_product, quantity=quantity)
+            if cart:
+                order.cart = cart
+                order.save()
+                return Response({'details': "added"}, status=status.HTTP_201_CREATED)
+            else:
+                order.cart = Cart.objects.create(user=customer)
+                order.save()
+                return Response({'details': "added"}, status=status.HTTP_201_CREATED)
         else:
-            cart_items = request.session.get('cart_items', [])
-            cart_items.append({
-                'id': len(cart_items) + 1,
-                'product_id': request.data['product_id'],
-                'quantity': request.data['quantity']
-            })
-            request.session['cart_items'] = cart_items
-            return Response(status=status.HTTP_201_CREATED)
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def cart_items_view(request):
     if request.user.is_authenticated:
-        cart=Cart.objects.get(user=request.user,status=False)
-        return render(request, 'cart_items.html',{'cart':cart})
+        customer = Customer.objects.get(id=request.user.id)
+        cart = Cart.objects.get(user=customer, status=False)
+        return render(request, 'cart_items.html', {'cart': cart})
     else:
 
         cart_items = request.session.get('cart_items', [])
@@ -102,16 +108,14 @@ def cart_items_view(request):
 def finalize_cart(request):
     cart_items = request.session.get('cart_items', [])
     if cart_items:
-        cart = Cart.objects.get_or_create(user=request.user)[0]
+        customer = Customer.objects.get(id=request.user.id)
+        cart = Cart.objects.get_or_create(user=customer, status=False)[0]
 
         for item in cart_items:
             product = Product.objects.get(id=item['product_id'])
             OrderDetail.objects.create(cart=cart, product=product, quantity=item['quantity'])
         del request.session['cart_items']
     return redirect('orders:api:cart_items_view')
-
-
-
 
 
 @login_required
@@ -122,3 +126,88 @@ def is_authenticated(request):
 def not_authenticated(request):
     return JsonResponse({'is_authenticated': False})
 
+
+from .serializers import *
+
+
+class ProductSingleShow(APIView):
+
+    def post(self, request):
+        data = request.data
+        print(data)
+        serializer = ProductDetailSerializer(data=data)
+        if serializer.is_valid():
+            new = {'product_id': serializer.validated_data.get('id'),
+                   'quantity': serializer.validated_data.get('number')}
+            product = Product.objects.get(id=serializer.validated_data.get('id'))
+            quantity = serializer.validated_data.get('quantity')
+            print('product', product.name)
+            return Response(data={'added': 'added'})
+        print('this is error')
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        product_id = request.query_params.get('product_id')
+        quantity = request.query_params.get('quantity')
+        print('get')
+
+        if product_id and quantity:
+            try:
+                product = Product.objects.get(id=product_id)
+                return Response(data={'product': product.name, 'price': product.price, 'quantity': quantity,
+                                      'total': int(product.price) * int(quantity)})
+            except Product.DoesNotExist:
+                return Response(data={'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(data={'error': 'Invalid parameters'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+from django.shortcuts import render
+
+
+def product_details_view(request):
+    return render(request, 'product_details.html')
+
+
+from django.shortcuts import redirect
+
+from orders.models import OrderDetail, Product
+from django.http import HttpResponse
+
+
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def create_order(request):
+    product_id = request.GET.get('product_id')
+    quantity = request.GET.get('quantity')
+    print('Product ID:', product_id)
+    print('Quantity:', quantity)
+    print('User:', request.user)
+
+    if product_id and quantity:
+        try:
+            product = Product.objects.get(id=product_id)
+            total_price = product.price * int(quantity)
+
+            customer = Customer.objects.get(id=request.user.id)
+            new_orders = OrderDetail(
+                product=product,
+                quantity=quantity,
+                total_price=total_price
+            )
+
+            cart = Cart.objects.filter(user=customer, status=False).first()
+            if cart:
+                new_orders.cart = cart
+                new_orders.save()
+            else:
+                new_orders.cart = Cart.objects.create(user=customer)
+                new_orders.save()
+
+            return redirect('website:landing_page')
+        except Product.DoesNotExist:
+            return HttpResponse("Product does not exist", status=404)
+
+    return HttpResponse("Invalid request", status=400)

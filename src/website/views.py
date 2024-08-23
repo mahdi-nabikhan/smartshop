@@ -52,38 +52,35 @@ class ProductDetailView(View):
         comments = Comments.objects.filter(product=product)
         form = QuantityForm()
         add_comment = AddCommentForm()
-        can_rate=OrderDetail.objects.filter(product=product,cart__user=Customer.objects.get(id=request.user.id))
-        rate=ProductRate.objects.filter(product=product)
+        # can_rate=OrderDetail.objects.filter(product=product,cart__user=Customer.objects.get(id=request.user.id))
+        rate = ProductRate.objects.filter(product=product)
         if rate:
-            total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(ProductRate.objects.filter(product=product))
-            context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments, 'can_rate': can_rate,'total_rate':total_rate}
+            total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(
+                ProductRate.objects.filter(product=product))
+            context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments,
+                       'total_rate': total_rate}
             return render(request, self.template_name, context)
 
         context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments,
-                   'can_rate': can_rate,}
+                   }
 
         return render(request, self.template_name, context)
 
     def post(self, request, id):
         form = QuantityForm(request.POST)
         add_comments = AddCommentForm(request.POST)
-        customer = Customer.objects.get(pk=request.user.pk)
+        customer = Customer.objects.get(id=request.user.id)
         product = Product.objects.get(id=id)
         comments = Comments.objects.filter(product=product)
         if form.is_valid():
             cart_item = form.save(commit=False)
             cart_item.product = product
-            if request.user.is_authenticated:
-                my_cart = Cart.objects.filter(user=request.user,status=False).first()
-                if my_cart:
+            if not request.user.is_authenticated:
 
-                    cart_item.cart = my_cart
-                    cart_item.save()
-                else:
-                    customer=Customer.objects.get(id=request.user.id)
-                    new=Cart.objects.create(user=customer)
-                    cart_item.cart=new
-                    cart_item.save()
+
+                new = Cart.objects.create(user=customer)
+                cart_item.cart = new
+                cart_item.save()
             else:
                 cart_items = request.session.get('cart_items', [])
                 cart_items.append({

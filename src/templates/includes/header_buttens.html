@@ -13,14 +13,16 @@
                     <li><a href="{% url 'customers:add_address' request.user.id %}"> Add Address</a></li>
 					<li><a href="{% url 'customers:customer_profile' request.user.pk %}" ><i class="fa fa-user" aria-hidden="true"></i>{{ request.user.first_name }}</a></li>
                         <li><a href="{% url 'accounts:logout'%}" ><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
+                        <li><a href="{% url 'orders:api:cart_items_view' %}" ><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
 
                         {% else %}
                         <li><a href="{% url 'accounts:login' %}" ><i class="fa fa-user" aria-hidden="true"></i>login</a></li>
                         <li><a href="{% url 'customers:customer_register' %}" ><i class="fa fa-arrow-right" aria-hidden="true"></i>Register</a></li>
+                        <li><a href="{% url 'orders:api:product_details' %}" ><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
                     {% endif %}
 
 					<li><a href="{% url 'customers:order_details' %}" ><i class="fa fa-file-text-o" aria-hidden="true"></i>Order History</a></li>
-					<li><a href="{% url 'orders:api:cart_items_view' %}" ><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
+					
 				</ul>
 			</div>
 

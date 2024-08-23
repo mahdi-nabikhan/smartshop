@@ -315,52 +315,127 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
 
                 <div class="col-md-7 single-top-left ">
-                    <div class="single-right">
-                        <h3>{{ products.name }}</h3>
+                {% if not request.user.is_authenticated %}
+                 <div class="single-right">
+    <h3>{{ products.name }}</h3>
 
-                        {#					<a href="{% url 'customers:add_comments'  products.id%}"> add comment</a>#}
-                        <div class="pr-single">
-                            {% if products.price_after %}
-                                <p class="reduced ">
-                                    <del>price : {{ products.price }}</del>
-                                    price after discount : {{ products.price_after }}</p>
-                            {% else %}
-                                <p class="reduced ">price : {{ products.price }}</p>
-                            {% endif %}
-                        </div>
-                        <div class="block block-w3">
-                            <div class="starbox small ghosting"></div>
-                        </div>
-                        <p class="in-pa">description : {{ products.description }}</p>
-                        <p> total rate : {{total_rate}}</p>
+    <div class="pr-single">
+        {% if products.price_after %}
+            <p class="reduced ">
+                <del>price : {{ products.price }}</del>
+                price after discount : {{ products.price_after }}</p>
+        {% else %}
+            <p class="reduced ">price : {{ products.price }}</p>
+        {% endif %}
+    </div>
+    <div class="block block-w3">
+        <div class="starbox small ghosting"></div>
+    </div>
+    <p class="in-pa">description : {{ products.description }}</p>
+    <p> total rate : {{total_rate}}</p>
 
-                        <ul class="social-top">
-                            <li><a href="#" class="icon facebook"><i class="fa fa-facebook"
-                                                                     aria-hidden="true"></i><span></span></a></li>
-                            <li><a href="#" class="icon twitter"><i class="fa fa-twitter"
-                                                                    aria-hidden="true"></i><span></span></a></li>
-                            <li><a href="#" class="icon pinterest"><i class="fa fa-pinterest-p"
-                                                                      aria-hidden="true"></i><span></span></a></li>
-                            <li><a href="#" class="icon dribbble"><i class="fa fa-dribbble"
-                                                                     aria-hidden="true"></i><span></span></a></li>
-                        </ul>
-                        <div class="add add-3">
-                            <form method="post">
-                                {% csrf_token %}
-                                {{ form.as_p }}
-                                <input class="btn btn-danger my-cart-btn my-cart-b" data-id="1" data-name="Wheat"
-                                       data-summary="summary 1" data-price="6.00" data-quantity="1"
-                                       data-image="images/si.jpg" type="submit" value="Add to cart">
+    <ul class="social-top">
+        <li><a href="#" class="icon facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span></span></a></li>
+        <li><a href="#" class="icon twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span></span></a></li>
+        <li><a href="#" class="icon pinterest"><i class="fa fa-pinterest-p" aria-hidden="true"></i><span></span></a></li>
+        <li><a href="#" class="icon dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i><span></span></a></li>
+    </ul>
+    <div class="add">
+        <form id="dataForm">
+            <input type="number" id="quantity" name="number" placeholder="Enter quantity">
+            <button type="submit">Add to Cart</button>
+        </form>
+    </div>
+    {% if can_rate %}
+        <a href="{% url 'website:product_rate' products.id %}"> test</a>
+    {% endif %}
+    <div class="clearfix"></div>
+</div>
 
-                            </form>
-                            {#										   <button >Add to Cart</button>#}
-                        </div>
-                    {% if can_rate %}
-                        <a href="{% url 'website:product_rate' products.id %}"> test</a>
-                    {% endif %}
-                        <div class="clearfix"></div>
-                    </div>
+<script>
+document.getElementById('dataForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const productId = parseInt("{{ products.id }}");
+    const quantity = parseInt(document.getElementById('quantity').value);
+    
+    // ذخیره‌سازی اطلاعات در لوکال استوریج
+    localStorage.setItem('productId', productId);
+    localStorage.setItem('quantity', quantity);
 
+    fetch('{% url 'orders:api:product_list' %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ id: productId, number: quantity })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+});
+</script>
+
+                {% endif %}
+                {% if request.user.is_authenticated %}
+<div class="single-right">
+    <h3>{{ products.name }}</h3>
+
+    <div class="pr-single">
+        {% if products.price_after %}
+            <p class="reduced ">
+                <del>price : {{ products.price }}</del>
+                price after discount : {{ products.price_after }}</p>
+        {% else %}
+            <p class="reduced ">price : {{ products.price }}</p>
+        {% endif %}
+    </div>
+    <div class="block block-w3">
+        <div class="starbox small ghosting"></div>
+    </div>
+    <p class="in-pa">description : {{ products.description }}</p>
+    <p> total rate : {{total_rate}}</p>
+
+    <ul class="social-top">
+        <li><a href="#" class="icon facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span></span></a></li>
+        <li><a href="#" class="icon twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span></span></a></li>
+        <li><a href="#" class="icon pinterest"><i class="fa fa-pinterest-p" aria-hidden="true"></i><span></span></a></li>
+        <li><a href="#" class="icon dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i><span></span></a></li>
+    </ul>
+    <div class="add">
+        <form id="dataForm">
+            <input type="number" id="quantity" name="number" placeholder="Enter quantity">
+            <button type="submit">Add to Cart</button>
+        </form>
+    </div>
+    {% if can_rate %}
+        <a href="{% url 'website:product_rate' products.id %}"> test</a>
+    {% endif %}
+    <div class="clearfix"></div>
+</div>
+
+<script>
+document.getElementById('dataForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const productId = parseInt("{{ products.id }}");
+     const quantity = parseInt(document.getElementById('quantity').value);
+    
+    fetch('{% url 'orders:api:cart_items_api' %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ id: productId, number: quantity })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+});
+</script>
+{% endif %}
 
                 </div>
                 <div class="clearfix"></div>
@@ -954,6 +1029,45 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 speed: 300,
                 slidesToShow: 1,
                 adaptiveHeight: true
+            });
+        });
+    </script>
+     <script>
+        // پاک کردن Local Storage هنگام بارگذاری صفحه
+        window.onload = function() {
+            localStorage.removeItem('cart');
+            console.log('Local Storage cleared');
+        };
+
+        document.getElementById('add-to-cart-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const productId = {{ product.id }};
+            const quantity = parseInt(document.querySelector('input[name="quantity"]').value, 10);
+
+            // ذخیره اطلاعات در Local Storage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push({ productId: productId, quantity: quantity });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            console.log(cart);
+
+            // ارسال اطلاعات به سرور
+            const cartData = JSON.parse(localStorage.getItem('cart'));
+            cartData.forEach(item => {
+                fetch('/orders/api/cart-items/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify(item)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
             });
         });
     </script>

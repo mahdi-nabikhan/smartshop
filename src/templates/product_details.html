@@ -1,0 +1,91 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Product Details</title>#}
+{#</head>#}
+{#<body>#}
+{#    <div id="product-details">#}
+{#        <h3>Product Details</h3>#}
+{#        <p id="product-name">Product Name: </p>#}
+{#        <p id="product-quantity">Quantity: </p>#}
+{#        <p id="product-price">Price: </p> #}
+{#        <p id="product-total">Total: </p> #}
+{#        <a href="{% url 'accounts:login' %}"> test</a>#}
+{#    </div>#}
+{##}
+{#    <script>#}
+{#        // خواندن اطلاعات از لوکال استوریج#}
+{#        const productId = localStorage.getItem('productId');#}
+{#        const quantity = localStorage.getItem('quantity');#}
+{##}
+{#        // ارسال درخواست GET به سرور#}
+{#        fetch(`/orders/product_list/?product_id=${productId}&quantity=${quantity}`, {#}
+{#            method: 'GET',#}
+{#            headers: {#}
+{#                'Content-Type': 'application/json',#}
+{#            },#}
+{#        })#}
+{#        .then(response => response.json())#}
+{#        .then(data => {#}
+{#            // نمایش اطلاعات به کاربر#}
+{#            document.getElementById('product-name').innerText = `Product Name: ${data.product}`;#}
+{#            document.getElementById('product-quantity').innerText = `Quantity: ${data.quantity}`;#}
+{#            document.getElementById('product-price').innerText = `Price: ${data.price}`;#}
+{#            document.getElementById('product-total').innerText = `Price: ${data.total}`;#}
+{#        })#}
+{#        .catch((error) => {#}
+{#            console.error('Error:', error);#}
+{#        });#}
+{#    </script>#}
+{#</body>#}
+{#</html>#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+</head>
+<body>
+    <div id="product-details">
+        <h3>Product Details</h3>
+        <p id="product-name">Product Name: </p>
+        <p id="product-quantity">Quantity: </p>
+        <p id="product-price">Price: </p>
+        <p id="product-total">Total Price: </p>
+    </div>
+
+    <a href="#" id="login-link">Login to Order</a> 
+
+    <script>
+        const productId = localStorage.getItem('productId');
+        const quantity = localStorage.getItem('quantity');
+        const url = `/orders/product_list/?product_id=${productId}&quantity=${quantity}`;
+        console.log('URL:', url);
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data:', data);
+            document.getElementById('product-name').innerText = `Product Name: ${data.product}`;
+            document.getElementById('product-quantity').innerText = `Quantity: ${data.quantity}`;
+            document.getElementById('product-price').innerText = `Price: ${data.price}`;
+            document.getElementById('product-total').innerText = `Total Price: ${data.total}`;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
+        // Update login link with productId and quantity
+        const loginLink = document.getElementById('login-link');
+        loginLink.href = `{% url 'accounts:login' %}?next={% url 'orders:api:create_order' %}&product_id=${productId}&quantity=${quantity}`;
+    </script>
+</body>
+</html>
