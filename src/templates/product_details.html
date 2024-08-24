@@ -357,6 +357,77 @@
 {#</body>#}
 {#</html>#}
 {##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Product Details</title>#}
+{#</head>#}
+{#<body>#}
+{#<div id="product-details">#}
+{#    <h3>Product Details</h3>#}
+{#    <p id="product-id">Product ID: </p>#}
+{#    <p id="product-name">Product Name: </p>#}
+{#    <p id="product-quantity">Quantity: </p>#}
+{#    <p id="product-price">Price: </p>#}
+{#    <p id="product-total">Total Price: </p>#}
+{#</div>#}
+{##}
+{#{% if not request.user.is_authenticated %}#}
+{#    <a href="{% url 'orders:api:login' %}?next={{ request.path }}">Login</a>#}
+{#{% else %}#}
+{#    <form id="dataForm" method="post">#}
+{#        <input type="hidden" id="product-id" name="product-id">#}
+{#        <input type="hidden" id="quantity" name="quantity">#}
+{#        <button type="submit">Submit</button>#}
+{#    </form>#}
+{#{% endif %}#}
+{##}
+{#<script>#}
+{#    const productId = localStorage.getItem('productId');#}
+{#    const quantity = localStorage.getItem('quantity');#}
+{#    const url = `/orders/product_list/?product_id=${productId}&quantity=${quantity}`;#}
+{#    console.log('URL:', url);#}
+{##}
+{#    fetch(url, {#}
+{#        method: 'GET',#}
+{#        headers: {#}
+{#            'Content-Type': 'application/json',#}
+{#        },#}
+{#    })#}
+{#        .then(response => response.json())#}
+{#        .then(data => {#}
+{#            console.log('Data:', data);#}
+{#            document.getElementById('product-id').innerText = `Product ID: ${data.product_id}`;#}
+{#            document.getElementById('product-name').innerText = `Product Name: ${data.product}`;#}
+{#            document.getElementById('product-quantity').innerText = `Quantity: ${data.quantity}`;#}
+{#            document.getElementById('product-price').innerText = `Price: ${data.price}`;#}
+{#            document.getElementById('product-total').innerText = `Total Price: ${data.total}`;#}
+{##}
+{#            // Set hidden form fields#}
+{#            document.getElementById('product-id').value = data.product_id;#}
+{#            document.getElementById('quantity').value = data.quantity;#}
+{#        })#}
+{#        .catch((error) => {#}
+{#            console.error('Error:', error);#}
+{#        });#}
+{##}
+{#    document.getElementById('dataForm').addEventListener('submit', function (event) {#}
+{#        event.preventDefault();#}
+{##}
+{#        const productId = document.getElementById('product-id').value;#}
+{#        const quantity = document.getElementById('quantity').value;#}
+{##}
+{#        // Directly go to create order URL#}
+{#        window.location.href = `/orders/create_order/${productId}/${quantity}/`;#}
+{#        localStorage.removeItem('productId');#}
+{#        localStorage.removeItem('quantity');#}
+{#    });#}
+{#</script>#}
+{#</body>#}
+{#</html>#}
+{##}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -419,10 +490,13 @@
         const productId = document.getElementById('product-id').value;
         const quantity = document.getElementById('quantity').value;
 
+        // Clear local storage before redirect
+        localStorage.removeItem('productId');
+        localStorage.removeItem('quantity');
+
         // Directly go to create order URL
         window.location.href = `/orders/create_order/${productId}/${quantity}/`;
     });
 </script>
 </body>
 </html>
-
