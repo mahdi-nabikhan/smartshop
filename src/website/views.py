@@ -44,62 +44,6 @@ class HomeView(ListView):
 #             return redirect('website:product_detail',pk=product.pk)
 #         context = {'products': product, 'add_comments': add_comments}
 #         return render(request, self.template_name, context)
-class ProductDetailView(View):
-    template_name = 'pages/product_details.html'
-
-    def get(self, request, id):
-        product = Product.objects.get(id=id)
-        comments = Comments.objects.filter(product=product)
-        form = QuantityForm()
-        add_comment = AddCommentForm()
-        # can_rate=OrderDetail.objects.filter(product=product,cart__user=Customer.objects.get(id=request.user.id))
-        rate = ProductRate.objects.filter(product=product)
-        if rate:
-            total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(
-                ProductRate.objects.filter(product=product))
-            context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments,
-                       'total_rate': total_rate}
-            return render(request, self.template_name, context)
-
-        context = {'products': product, 'form': form, add_comment: 'add_comments', 'comments': comments,
-                   }
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, id):
-        form = QuantityForm(request.POST)
-        add_comments = AddCommentForm(request.POST)
-        customer = Customer.objects.get(id=request.user.id)
-        product = Product.objects.get(id=id)
-        comments = Comments.objects.filter(product=product)
-        if form.is_valid():
-            cart_item = form.save(commit=False)
-            cart_item.product = product
-            if not request.user.is_authenticated:
-
-
-                new = Cart.objects.create(user=customer)
-                cart_item.cart = new
-                cart_item.save()
-            else:
-                cart_items = request.session.get('cart_items', [])
-                cart_items.append({
-                    'product_id': product.id,
-                    'quantity': cart_item.quantity
-                })
-                request.session['cart_items'] = cart_items
-
-        if add_comments.is_valid():
-            add_comments.save(commit=False)
-            add_comments.instance.product = product
-            add_comments.instance.user = customer
-            add_comments.save()
-            return redirect('website:product_detail', id=product.id)
-
-        context = {'products': product, 'form': form, 'add_comments': add_comments, 'comments': comments}
-        return render(request, self.template_name, context)
-
-
 class AddProductRate(View):
 
     def get(self, request, id):
@@ -112,7 +56,7 @@ class AddProductRate(View):
             'product': product,
             'form': form
         }
-        return render(request, 'customer/rate_products.html', context)
+        return render(request, 'pages/product_details.html', context)
 
     def post(self, request, id):
         customer = Customer.objects.get(id=request.user.id)
@@ -127,6 +71,113 @@ class AddProductRate(View):
         context = {
             'order': order,
             'product': product,
-            'form': form
+            'form1': form
         }
-        return render(request, 'customer/rate_products.html', context)
+        print('this is shit')
+        return render(request, 'pages/product_details.html', context)
+
+
+class ProductDetailView(View):
+    template_name = 'pages/product_details.html'
+
+    def get(self, request, id):
+        product = Product.objects.get(id=id)
+        comments = Comments.objects.filter(product=product)
+        form = QuantityForm()
+        add_comment = AddCommentForm()
+        add_rating_form = AddRatingForm()
+
+        if request.user.is_authenticated:
+            can_rate = OrderDetail.objects.filter(product=product, cart__user=Customer.objects.get(id=request.user.id),
+                                                  cart__status=True)
+
+        rate = ProductRate.objects.filter(product=product)
+        if rate:
+            total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(
+                ProductRate.objects.filter(product=product))
+            context = {
+                'products': product,
+                'form': form,
+                'add_comments': add_comment,
+                'comments': comments,
+                'total_rate': total_rate,
+                'can_rate': can_rate,
+                'add_rating_form': add_rating_form
+            }
+            return render(request, self.template_name, context)
+
+        context = {
+            'products': product,
+            'form': form,
+            'add_comments': add_comment,
+            'comments': comments,
+            'add_rating_form': add_rating_form
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, id):
+        form = QuantityForm(request.POST)
+        add_comments = AddCommentForm(request.POST)
+        add_rating_form = AddRatingForm(request.POST)
+        customer = Customer.objects.get(id=request.user.id)
+        product = Product.objects.get(id=id)
+        comments = Comments.objects.filter(product=product)
+
+        if form.is_valid():
+            cart_item = form.save(commit=False)
+            cart_item.product = product
+
+            new = Cart.objects.create(user=customer)
+            cart_item.cart = new
+            cart_item.save()
+
+        if add_comments.is_valid():
+            add_comments.save(commit=False)
+            add_comments.instance.product = product
+            add_comments.instance.user = customer
+            add_comments.save()
+            return redirect('website:product_detail', id=product.id)
+
+        if add_rating_form.is_valid():
+            rate = add_rating_form.save(commit=False)
+            rate.product = product
+            rate.save()
+            return redirect('website:product_detail', id=product.id)
+
+        context = {
+            'products': product,
+            'form': form,
+            'add_comments': add_comments,
+            'comments': comments,
+            'add_rating_form': add_rating_form
+        }
+        return render(request, self.template_name, context)
+
+
+class Search(ListView):
+    model = Product
+    template_name = 'customer/search_products.html'
+    context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        context = super(Search, self).get_context_data(**kwargs)
+        product_name = self.request.GET.get('q')
+        all_products = self.get_queryset().filter(name__icontains=product_name)
+        context["products"] = all_products
+        context["not_found"] = f'{product_name} does not exist.'
+        return context
+
+
+class SearchStore(ListView):
+    model = Store
+    template_name = 'pages/index.html'
+    context_object_name = 'shop_list'
+
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchStore, self).get_context_data(**kwargs)
+        store_name = self.request.GET.get('q')
+        all_store = self.get_queryset().filter(name__icontains=store_name)
+        context["shop_list"] = all_store
+        context["not_found"] = f'{store_name} does not exist.'
+        return context

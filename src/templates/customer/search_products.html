@@ -81,14 +81,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   </div>
             <nav class="navbar navbar-light bg-light">
   
-  <form class="form-inline" method="get" action="{% url 'website:search_products' %}">
-      {% csrf_token %}
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+  <form class="form-inline" method="post">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
 </nav>
 </nav>
-    
 </div>
   <!---->
  <!--banner-->
@@ -101,58 +99,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </div>
 		<div class="single">
 			<div class="container">
-						<div class="single-top-main">
-	   		<div class="col-md-5 single-top">
-	   		<div class="single-w3agile">
-							
-<div id="picture-frame">
-			<img src='{{ store.image.url }}' data-src="images/si-1.jpg" alt="" class="img-responsive"/>
-		</div>
-										<script src="{{ store.image.url }}"></script>
-								<script>
-			$(function() {
-				$("#picture-frame").zoomToo({
-					magnify: 1
-				});
-			});
-		</script>
-		
-		
-		
-			</div>
-			</div>
-			<div class="col-md-7 single-top-left ">
-								<div class="single-right">
-				<h3>{{ store.name }}</h3>
-				
 					
-				 <div class="pr-single">
-				  
-				</div>
-				<div class="block block-w3">
-					<div class="starbox small ghosting"> </div>
-				</div>
-				<p class="in-pa">{{ store.description }} </p>
-			   	
-				<ul class="social-top">
-					<li><a href="#" class="icon facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span></span></a></li>
-					<li><a href="#" class="icon twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span></span></a></li>
-					<li><a href="#" class="icon pinterest"><i class="fa fa-pinterest-p" aria-hidden="true"></i><span></span></a></li>
-					<li><a href="#" class="icon dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i><span></span></a></li>
-				</ul>
-					<div class="add add-3">
-										   <button class="btn btn-danger my-cart-btn my-cart-b" data-id="1" data-name="Wheat" data-summary="summary 1" data-price="6.00" data-quantity="1" data-image="images/si.jpg">Add to Cart</button>
-										</div>
-				
-				 
-			   
-			<div class="clearfix"> </div>
-			</div>
-		 
-
-			</div>
-		   <div class="clearfix"> </div>
-	   </div>	
 				 
 				
 	</div>
