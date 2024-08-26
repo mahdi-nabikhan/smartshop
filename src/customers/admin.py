@@ -1,19 +1,31 @@
 from django.contrib import admin
-from .models import *
+from .models import Customer, Address, Comments
 
 
-# Register your models here.
-
-@admin.register(Address)
-class AddressAdmin(admin.ModelAdmin):
-    list_display = ('street', 'city', 'country')
+class AddressInline(admin.TabularInline):
+    model = Address
+    extra = 1
 
 
-@admin.register(Comments)
-class CommentsAdmin(admin.ModelAdmin):
-    list_display = ('descriptions', 'user')
+class CommentsInline(admin.TabularInline):
+    model = Comments
+    extra = 1
+
+
+from django.contrib import admin
+from .models import Customer, Address, Comments
+from orders.models import *
+
+
+class CartInline(admin.TabularInline):
+    model = Cart
+    extra = 1
+
+
+
 
 
 @admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'phone',)
+class Customer(admin.ModelAdmin):
+    list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_admin')
+    inlines = [AddressInline, CommentsInline, CartInline]

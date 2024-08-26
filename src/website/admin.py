@@ -1,33 +1,44 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImages, ProductRate,Discount
+from .models import Category, Discount, Product, ProductImages, ProductRate
 
 
+class ProductImagesInline(admin.TabularInline):
+    model = ProductImages
+    extra = 1
+
+
+class ProductRateInline(admin.TabularInline):
+    model = ProductRate
+    extra = 1
+
+
+class ProductInline(admin.TabularInline):
+    model = Product
+    extra = 1
+
+
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('title', 'image', 'description')
-    search_fields = ('title',)
-
-
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'quantity_in_stock', 'price', 'discount', 'category', 'store')
-    search_fields = ('name', 'category__title', 'store__name')
-
-
-class ProductImagesAdmin(admin.ModelAdmin):
-    list_display = ('product_image', 'product', 'title', 'description')
-    search_fields = ('product__name', 'title')
-
-
-class ProductRateAdmin(admin.ModelAdmin):
-    list_display = ('rate', 'product')
-    search_fields = ('product__name',)
-
-
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Product, ProductAdmin)
-admin.site.register(ProductImages, ProductImagesAdmin)
-admin.site.register(ProductRate, ProductRateAdmin)
+    list_display = ('title', 'description', 'is_parent')
+    inlines = [ProductInline, ]
 
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
     list_display = ('discount_type', 'value')
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'quantity_in_stock', 'price', 'price_after', 'category', 'store')
+    inlines = [ProductImagesInline, ProductRateInline]
+
+
+@admin.register(ProductImages)
+class ProductImagesAdmin(admin.ModelAdmin):
+    list_display = ('title', 'product')
+
+
+@admin.register(ProductRate)
+class ProductRateAdmin(admin.ModelAdmin):
+    list_display = ('rate', 'product', 'total_rate')
