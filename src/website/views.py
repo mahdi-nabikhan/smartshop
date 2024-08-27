@@ -92,8 +92,9 @@ class ProductDetailView(View):
         if request.user.is_authenticated:
             can_rate = OrderDetail.objects.filter(product=product, cart__user=Customer.objects.get(id=request.user.id),
                                                   cart__status=True)
+            print(can_rate)
 
-        rate = ProductRate.objects.filter(product=product)
+        rate = ProductRate.objects.filter(product=product).exists()
         if rate:
             total_rate = ProductRate.objects.filter(product=product).aggregate(total=Sum('rate'))['total'] / len(
                 ProductRate.objects.filter(product=product))
@@ -174,7 +175,6 @@ class SearchStore(ListView):
     model = Store
     template_name = 'pages/index.html'
     context_object_name = 'shop_list'
-
 
     def get_context_data(self, **kwargs):
         context = super(SearchStore, self).get_context_data(**kwargs)

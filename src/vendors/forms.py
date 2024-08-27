@@ -1,7 +1,8 @@
 from django import forms
-from .models import Store, StoreAddress, Managers, Admin, Operator
+from .models import Store, StoreAddress, Managers, Admin, Operator, StoreRate
 from website.models import Product, ProductImages, Discount
 from orders.models import OrderDetail
+
 
 class RegistrationManagerForms(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput)
@@ -76,6 +77,7 @@ class UpdateProductForm(forms.ModelForm):
             product.save()
         return product
 
+
 class UpdateStoreForm(forms.ModelForm):
     class Meta:
         model = Store
@@ -113,3 +115,9 @@ class OrderDetailForm(forms.ModelForm):
     class Meta:
         model = OrderDetail
         fields = ['status']
+
+
+class StoreRateForm(forms.ModelForm):
+    class Meta:
+        model = StoreRate
+        fields = ('rate',)

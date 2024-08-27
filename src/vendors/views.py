@@ -194,21 +194,71 @@ class UpdateManager(UpdateView):
     template_name = 'admins/update_managers.html'
 
 
-class StoreDetail(DetailView):
-    template_name = 'pages/single.html'
-    model = Store
-    context_object_name = 'store'
+from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
+from django.views import View
 
-    def get_context_data(self, **kwargs):
-        store = self.get_object()
-        context = super().get_context_data(**kwargs)
+
+class StoreDetail(View):
+    template_name = 'pages/single.html'
+
+    def get(self, request, pk):
+        total_rate = None
+        store = get_object_or_404(Store, pk=pk)
+        forms = StoreRateForm()
         products = Product.objects.filter(store=store)
         paginator = Paginator(products, 4)
-        page_number = self.request.GET.get('page')
+        page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        context['products'] = page_obj
-        context['address'] = StoreAddress.objects.filter(store=store)
-        return context
+        address = StoreAddress.objects.filter(store=store)
+        rate = StoreRate.objects.filter(store=store)
+        rate2 = StoreRate.objects.filter(store=store).exists()
+        if rate2:
+            total_rate = rate.aggregate(Sum('rate'))['rate__sum'] / len(rate)
+            print('this is total rate', total_rate)
+
+        context = {
+            'store': store,
+            'products': page_obj,
+            'address': address,
+            'form': forms,
+            'total_rate': total_rate
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        store = Store.objects.get(pk=pk)
+        form = StoreRateForm(request.POST)
+        total_rate = None
+        store = get_object_or_404(Store, pk=pk)
+        products = Product.objects.filter(store=store)
+        paginator = Paginator(products, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        address = StoreAddress.objects.filter(store=store)
+
+        rate = StoreRate.objects.filter(store=store)
+        rate2 = StoreRate.objects.filter(store=store).exists()
+        if rate2:
+            total_rate = rate.aggregate(Sum('rate'))['rate__sum'] / len(rate)
+            print('this is total rate', total_rate)
+
+        print('this is rate', rate)
+        if form.is_valid():
+            print('hi')
+            rate = form.save(commit=False)
+            rate.store = store
+            rate.save()
+            return redirect('vendors:store_detail',pk=store.pk)
+        context = {
+            'store': store,
+            'products': page_obj,
+            'address': address,
+            'form': form,
+            'total_rate': total_rate
+        }
+        return render(request, self.template_name, context)
 
 
 @method_decorator(admin_or_manager_required, name='dispatch')
@@ -246,7 +296,7 @@ class AddDiscountView(View):
                 else:
                     product.save()
                     return redirect('dashboards:admin_panel')
-        return render(request, '', {'form': form})
+        return render(request, 'admins/add_discount.html', {'form': form})
 
 
 @method_decorator(admin_or_manager_required, name='dispatch')
@@ -321,9 +371,6 @@ class ListOrderDetails(View):
         return render(request, 'admins/order_details.html', context)
 
 
-# urls.py
-
-
 class DetailOrderDetails(View):
     template_name = 'admins/order_detail_2.html'
 
@@ -339,3 +386,25 @@ class OrderDetailUpdated(UpdateView):
     success_url = reverse_lazy('dashboards:admin_panel')
     context_object_name = 'forms'
     template_name = 'admins/order_update.html'
+
+
+class ProductsTopPrice(View):
+
+    def get(self, request, id):
+        store = Store.objects.get(id=id)
+        products = Product.objects.filter(store=store).order_by('-price')
+        context = {'products': products, 'store': store}
+        return render(request, template_name='pages/product_top_price.html', context=context)
+
+
+from django.db.models import Avg
+
+from django.db.models import Avg
+
+
+class ProductsTopRate(View):
+    def get(self, request, id):
+        store = Store.objects.get(id=id)
+        products = Product.objects.filter(store=store).annotate(average_rate=Avg('product_rate__rate')).order_by(
+            '-average_rate')
+        return render(request, 'pages/product_top_rate.html', {'products': products, 'store': store})

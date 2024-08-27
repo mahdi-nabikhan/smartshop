@@ -25,8 +25,8 @@ urlpatterns = [
     path('order_detail_list/<int:id>/', ListOrderDetails.as_view(), name='order_detail_list'),
     path('order_detail/<int:pk>/',DetailOrderDetails.as_view(), name='order_detail'),
     path('order_updated/<int:pk>/',OrderDetailUpdated.as_view(),name='order_updated'),
-
-
+    path('top_price_products/<int:id>/',ProductsTopRate.as_view(),name='top_price_products'),
+    path('top_rate_products/<int:id>/',ProductsTopRate.as_view(),name='top_rate_products'),
     # path('store_register/<int:id>',RegisterStoreView.as_view(),name='store_register'),
     # path('add_address_store/<int:id>',StoreAddressView.as_view(),name='add_address_store'),
 
