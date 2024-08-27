@@ -16,6 +16,7 @@
     {% csrf_token %}
 </head>
 <body>
+
     <h1>Cart Items</h1>
     <div id="cart-items">
         {% if user.is_authenticated %}
@@ -24,7 +25,7 @@
             {% for item in cart_items %}
                 <div class="cart-item">
                     <h2>{{ item.product.name }}</h2>
-                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    <img src="{{ item.product.image_for_product.first.product_image.url}}" alt="{{ item.product.name }}">
                     <p>Price: {{ item.product.price }}</p>
                     <p>Quantity: {{ item.quantity }}</p>
                 </div>
@@ -136,33 +137,43 @@
             }
 
             // Function to update a cart item
-            function updateCartItem(itemId, quantity) {
-                if (quantity <= 0) {
-                    $('#error-message').text('Quantity must be a positive integer');
-                    return;
-                }
+            // Function to update a cart item
+$(document).on('click', '.update-button', function() {
+    var itemId = $(this).data('id');
+    var quantity = $('#cart-item-' + itemId + ' .quantity-input').val();
+    updateCartItem(itemId, quantity);
+});
 
-                $.ajax({
-                    url: '/orders/cart-items//' + itemId + '/',  // URL to APIView
-                    method: 'PATCH',
-                    headers: {
-                        'X-CSRFToken': csrftoken,
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify({ quantity: quantity }),
-                    contentType: 'application/json',
-                    success: function () {
-                        console.log('Cart item updated');
-                        $('#error-message').text('Cart item updated successfully');
-                        // Update the quantity display in the DOM
-                        $('#cart-items2-' + itemId + ' .quantity-input').val(quantity);
-                    },
-                    error: function (error) {
-                        console.error('Error updating cart item:', error.responseText);
-                        $('#error-message').text('Error updating cart item: ' + error.responseText);
-                    }
-                });
-            }
+function updateCartItem(itemId, quantity) {
+    if (quantity <= 0) {
+        $('#error-message').text('Quantity must be a positive integer');
+        return;
+    }
+
+    $.ajax({
+        url: '/orders/cart-items/' + itemId + '/',  // URL to APIView
+        method: 'PATCH',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            quantity: quantity
+        }),
+        contentType: 'application/json',
+        success: function () {
+            console.log('Cart item updated');
+            $('#error-message').text('Cart item updated successfully');
+            // Update the quantity display in the DOM
+            $('#cart-item-' + itemId + ' .quantity-input').val(quantity);
+        },
+        error: function (error) {
+            console.error('Error updating cart item:', error.responseText);
+            $('#error-message').text('Error updating cart item: ' + error.responseText);
+        }
+    });
+}
+
 
             // Load cart items on page load
             loadCartItems();

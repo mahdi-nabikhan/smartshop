@@ -34,13 +34,18 @@ class CartItemAPIView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     def patch(self, request, id):
+        print('hi')
         if request.user.is_authenticated:
             try:
                 customer = Customer.objects.get(id=request.user.id)
                 cart_item = OrderDetail.objects.get(id=id, cart__user=customer)
-                serializer = CartItemSerializer2(cart_item, data=request.data, partial=True)
+                serializer = CartItemSerializer2(instance=cart_item, data=request.data, partial=True)
+                print("this is cart item",cart_item)
+                print('this is request . data ',request.data.get('quantity'))
                 if serializer.is_valid():
+
                     serializer.save()
+                    print(serializer.data)
                     return Response(serializer.data)
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Sum
+
 from accounts.models import User
 
 
@@ -22,6 +24,15 @@ class Store(models.Model):
 class StoreRate(models.Model):
     rate = models.PositiveIntegerField()
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_rate')
+    total_rate = models.PositiveIntegerField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.total_rate = self.get_total_rate()
+        return super().save(*args, **kwargs)
+
+    def get_total_rate(self):
+        total = StoreRate.objects.filter(store=self.store).aggregate(total=Sum('rate'))['total']
+        return total
 
 
 class StoreAddress(models.Model):

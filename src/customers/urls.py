@@ -13,9 +13,5 @@ urlpatterns = [
     path('order_detail/comfied/',SeeOrderDetailComformed.as_view(),name = 'order_details_comfied'),
     path('order_details/<int:pk>/',OrderDetailDetailView.as_view(),name='detail_detail'),
     path('cart_details/<int:id>/',CartDetails.as_view(),name='cart_detail')
-
-
-
-
-
 ]
+
