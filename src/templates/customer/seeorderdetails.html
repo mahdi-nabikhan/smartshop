@@ -1,15 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-                   <img src="{{ orders.product.image_for_product.first.product_image.url }}" class="img-responsive" alt="{{ product.name }}">
-<p>name : {{ orders.product.name }}</p>
-<p>quantity : {{ orders.quantity }}</p><br>
-<p>status : {{ orders.status }}</p><br>
-<p> total price : {{ orders.total_price }}</p>
-<p>{{ orders.processed }}</p>
-</body>
-</html>
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div style="display: flex; margin-top: 100px">
+        <div style="flex: 1;max-width: 500px;margin-left: 150px">
+            <img src="{{ orders.product.image_for_product.first.product_image.url }}" style="  width: 100%;height: auto;"
+                 alt="{{ product.name }}">
+        </div>
+        <div style="flex: 2;padding-left: 20px;">
+            <p>name : {{ orders.product.name }}</p>
+            <p>quantity : {{ orders.quantity }}</p><br>
+            <p>status : {{ orders.status }}</p><br>
+            <p> total price : {{ orders.total_price }}</p>
+            <p>{{ orders.processed }}</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="add rate">
+            </form>
+        </div>
+    </div>
+{% endblock %}

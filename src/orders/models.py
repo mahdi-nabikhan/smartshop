@@ -16,7 +16,6 @@ class OrderDetail(models.Model):
     class Status(models.TextChoices):
         pending = 'P', 'Pending'
         confirmed = 'C', 'Confirmed'
-        rejected = 'R', 'Rejected'
 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='order_cart')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_product')
@@ -36,5 +35,5 @@ class OrderDetail(models.Model):
 class Bill(models.Model):
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='bill_cart')
     created_at = models.DateField(auto_now_add=True)
-    address = models.OneToOneField(Address, on_delete=models.CASCADE, related_name='bill_address')
-    status=models.BooleanField(default=False)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='bill_address')
+    status = models.BooleanField(default=False)

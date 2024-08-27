@@ -21,7 +21,7 @@ class CreateBillView(View):
     def get(self, request, id):
         form = AddressSelectionForm(user=request.user)
         cart = Cart.objects.get(id=id)
-        orders = OrderDetail.objects.filter(cart=cart, status='C', processed=False)
+        orders = OrderDetail.objects.filter(cart=cart,  processed=False)
         cart2 = orders.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
         return render(request, self.template_name,
@@ -46,7 +46,7 @@ class PeyBill(View):
     def post(self, request, id):
         cart = Cart.objects.get(id=id)
         bill = Bill.objects.get(cart=cart)
-        orders = OrderDetail.objects.filter(cart=cart, status='C', processed=False)
+        orders = OrderDetail.objects.filter(cart=cart, processed=False)
 
         orders.update(processed=True)
         cart.status=True

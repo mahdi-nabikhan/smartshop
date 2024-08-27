@@ -87,6 +87,8 @@ class ProductDetailView(View):
         add_comment = AddCommentForm()
         add_rating_form = AddRatingForm()
 
+        can_rate = None
+
         if request.user.is_authenticated:
             can_rate = OrderDetail.objects.filter(product=product, cart__user=Customer.objects.get(id=request.user.id),
                                                   cart__status=True)

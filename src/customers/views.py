@@ -5,6 +5,7 @@ from django.views import View
 from django.views.generic import DetailView, UpdateView, ListView
 from .models import *
 from .forms import RegisterForm, AddressForm, AddCommentForm
+from website.forms import AddRatingForm
 from orders.models import *
 
 
@@ -81,7 +82,7 @@ class SeeOrderDetail(ListView):
 
 
 class SeeOrderDetailRejected(ListView):
-    queryset = OrderDetail.objects.filter(status='R')
+    queryset = OrderDetail.objects.filter(status='C')
     template_name = 'customer/order_detail_status_rejected.html'
     context_object_name = 'orders'
 
@@ -92,18 +93,36 @@ class SeeOrderDetailComformed(ListView):
     context_object_name = 'orders'
 
 
-class OrderDetailDetailView(DetailView):
-    model = OrderDetail
+class OrderDetailDetailView(View):
+
     template_name = 'customer/seeorderdetails.html'
-    context_object_name = 'orders'
+
+
+    def get(self, request, pk):
+        orders = OrderDetail.objects.get(pk=pk)
+        form = AddRatingForm()
+        context = {'orders': orders, 'form': form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        orders = OrderDetail.objects.get(pk=pk)
+        form = AddRatingForm(request.POST)
+        if form.is_valid():
+            rating = form.save(commit=False)
+            rating.product = orders.product
+            rating.save()
+        context = {'orders': orders, 'form': form}
+        return render(request, template_name=self.template_name, context=context)
 
 
 class CartDetails(View):
     def get(self, request, id):
-        cart=Cart.objects.get(id=id,status=True)
-        order=OrderDetail.objects.filter(cart=cart,status='C',processed=True)
+        cart = Cart.objects.get(id=id, status=True)
+        print(cart)
+        order = OrderDetail.objects.filter(cart=cart)
+        print(order)
         cart2 = order.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
-        context={'orders':order,'total_price':total_price}
+        context = {'orders': order, 'total_price': total_price}
         print(context)
-        return render(request,'customer/cart_details.html',context)
+        return render(request, 'customer/cart_details.html', context)

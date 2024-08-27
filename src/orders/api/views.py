@@ -1,16 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from website.models import Product
-from customers.models import *
-from orders.models import *
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from .serializers import CartItemSerializer, CartItemSerializer2
+from django.shortcuts import redirect
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class CartItemAPIView(APIView):
@@ -90,36 +83,10 @@ def cart_items_view(request):
         customer = Customer.objects.get(id=request.user.id)
         cart = Cart.objects.get(user=customer, status=False)
         return render(request, 'cart_items.html', {'cart': cart})
-    else:
-
-        cart_items = request.session.get('cart_items', [])
-        cart_items = [
-            {
-                'product': Product.objects.get(id=item['product_id']),
-                'quantity': item['quantity']
-            }
-            for item in cart_items
-        ]
-        context = {'cart_items': cart_items}
-        return render(request, 'cart_items.html', context)
 
 
-@login_required
-def finalize_cart(request):
-    cart_items = request.session.get('cart_items', [])
-    if cart_items:
-        customer = Customer.objects.get(id=request.user.id)
-        cart = Cart.objects.get_or_create(user=customer, status=False)[0]
-
-        for item in cart_items:
-            product = Product.objects.get(id=item['product_id'])
-            OrderDetail.objects.create(cart=cart, product=product, quantity=item['quantity'])
-        del request.session['cart_items']
-    return redirect('orders:api:cart_items_view')
 
 
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 
 
 def is_authenticated_view(request):
@@ -172,99 +139,6 @@ def product_details_view(request):
     return render(request, 'product_details.html')
 
 
-from django.shortcuts import redirect
-
-from orders.models import OrderDetail, Product
-from django.http import HttpResponse
-
-from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-
-# @login_required
-# def create_order(request):
-#     product_id = request.GET.get('productId')
-#     quantity = request.GET.get('quantity')
-#     print('this is product id ',product_id)
-#     print('this is quantity',quantity)
-#     print('hiiiiiiiiiiiiiii')
-#
-#     if product_id and quantity:
-#         try:
-#             product = Product.objects.get(id=product_id)
-#             total_price = product.price * int(quantity)
-#
-#             customer = Customer.objects.get(id=request.user.id)
-#             new_orders = OrderDetail(
-#                 product=product,
-#                 quantity=quantity,
-#                 total_price=total_price
-#             )
-#
-#             cart = Cart.objects.filter(user=customer, status=False).first()
-#             if cart:
-#                 new_orders.cart = cart
-#                 new_orders.save()
-#             else:
-#                 new_orders.cart = Cart.objects.create(user=customer)
-#                 new_orders.save()
-#
-#             return redirect('website:landing_page')
-#         except Product.DoesNotExist:
-#             return HttpResponse("Product does not exist", status=404)
-#
-#     return HttpResponse("Invalid request", status=400)
-
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-
-from .serializers import CartItemSerializer, CartItemSerializer2
-
-# class CreateOrder(APIView):
-#     def get(self, request):
-#         print('this is create order get method')
-#         if request.user.is_authenticated:
-#             customer = Customer.objects.get(id=request.user.id)
-#             cart_items = OrderDetail.objects.filter(cart__user=customer, processed=False)
-#             serializer = CartItemSerializer2(cart_items, many=True)
-#             return Response(serializer.data)
-#         else:
-#             cart_items = request.session.get('cart_items', [])
-#             return Response(cart_items)
-#
-#     def post(self, request):
-#         serializer = CartItemSerializer(data=request.data)
-#         print('this is show in create orders:', request.data)
-#         customer = Customer.objects.get(id=request.user.id)
-#         cart = Cart.objects.filter(user=customer, status=False).first()
-#
-#         if serializer.is_valid():
-#             product_id = serializer.validated_data.get('id')
-#             quantity = serializer.validated_data.get('number')
-#             my_product = Product.objects.get(id=product_id)
-#             order = OrderDetail(product=my_product, quantity=quantity)
-#             if cart:
-#                 order.cart = cart
-#                 order.save()
-#                 return Response({'details': "added"}, status=status.HTTP_201_CREATED)
-#             else:
-#                 order.cart = Cart.objects.create(user=customer)
-#                 order.save()
-#                 return Response({'details': "added"}, status=status.HTTP_201_CREATED)
-#         else:
-#             print(serializer.errors)
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
 
 
 def order_create(request, id, quantity):
