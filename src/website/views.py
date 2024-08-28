@@ -183,3 +183,14 @@ class SearchStore(ListView):
         context["shop_list"] = all_store
         context["not_found"] = f'{store_name} does not exist.'
         return context
+
+
+class TopRatedStoresView(ListView):
+    template_name = 'pages/top_rated_stores.html'
+    context_object_name = 'shop_list'
+    paginate_by = 4
+
+    def get_queryset(self):
+
+        print(Store.objects.annotate(total_rate=Sum('store_rate__rate')).order_by('-total_rate'))
+        return Store.objects.annotate(total_rate=Sum('store_rate__rate')).order_by('-total_rate')

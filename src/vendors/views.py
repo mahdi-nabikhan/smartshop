@@ -250,7 +250,7 @@ class StoreDetail(View):
             rate = form.save(commit=False)
             rate.store = store
             rate.save()
-            return redirect('vendors:store_detail',pk=store.pk)
+            return redirect('vendors:store_detail', pk=store.pk)
         context = {
             'store': store,
             'products': page_obj,
