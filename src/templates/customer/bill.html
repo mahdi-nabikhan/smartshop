@@ -1,36 +1,62 @@
-<!-- templates/customer/bill.html -->
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Bill</button>
-</form>
+{% extends 'base/base.html' %}
+{% block content %}
+<style>
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .product-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .product-image {
+        width: 200px;
+        height: 200px;
+        margin-right: 20px;
+    }
+    .product-details {
+        flex-grow: 1;
+    }
+    .pay-button {
+        margin-top: 20px;
+    }
+    .address-form {
+        margin-top: 20px;
+    }
+</style>
 
-<h2>Order Details</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="center-content">
+    <h2>Order Details</h2>
+    <div>
         {% for order in order_details %}
-        <tr>
-            <td>{{ order.product.name }}</td>
-            <td>{{ order.quantity }}</td>
-            <td>{{ order.product.price }}</td>
-            <td>{{ order.total_price}}</td>
-            <td>{{ order.get_status_display }}</td>
-        </tr>
+        <div class="product-container">
+            <img src="{{ order.product.image_for_product.first.product_image.url }}" class="product-image" alt="{{ order.product.name }}">
+            <div class="product-details">
+                <p>{{ order.product.name }}</p>
+                <p>Quantity: {{ order.quantity }}</p>
+                <p>Price: {{ order.product.price }}</p>
+                <p>Total: {{ order.total_price }}</p>
+                <p>Status: {{ order.get_status_display }}</p>
+            </div>
+        </div>
         {% endfor %}
-    <p> total price : {{ total_price }}</p>
-        <form method="post" action="{% url 'orders:pay_bill' cart.id %}">
+    </div>
+
+    <p>Total price: {{ total_price }}</p>
+
+    <div class="address-form">
+        <form method="post">
             {% csrf_token %}
-            <input type="submit" value="pay">
+            {{ form.as_p }}
+            <button type="submit">Add Address</button>
         </form>
-  
-    </tbody>
-</table>
+    </div>
+
+    <form method="post" action="{% url 'orders:pay_bill' cart.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Pay" class="pay-button">
+    </form>
+</div>
+{% endblock %}
