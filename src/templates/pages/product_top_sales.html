@@ -133,11 +133,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<div class="starbox small ghosting"> </div>
 				</div>
 				<p class="in-pa">{{ store.description }} </p>
-			   	{% if total_rate %}
-                    <p class="in-pa">Total rate = {{ total_rate }} </p>
-                    
-                    
-			   	{% endif %}
+			   	
 				<ul class="social-top">
 					<li><a href="#" class="icon facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span></span></a></li>
 					<li><a href="#" class="icon twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span></span></a></li>
@@ -145,11 +141,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<li><a href="#" class="icon dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i><span></span></a></li>
 				</ul>
 					<div class="add add-3">
-										   <form method="post">
-                                               {% csrf_token %}
-                                               {{ form.as_p }}
-                                               <input class="btn btn-danger my-cart-btn my-cart-b" type="submit" value="add rate">
-                                           </form>
+										   <button class="btn btn-danger my-cart-btn my-cart-b" data-id="1" data-name="Wheat" data-summary="summary 1" data-price="6.00" data-quantity="1" data-image="images/si.jpg">Add to Cart</button>
 										</div>
 				
 				 
@@ -178,9 +170,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 		</div>
 			<div class="tab-head ">
-				<a href="{% url 'vendors:top_price_products' store.id %}">Top Price</a>
-                <a href="{% url 'vendors:top_rate_products' store.id %}"> Top Rate</a>
-                <a href="{% url 'vendors:top_selas_products' store.id %}"> Top Selas</a>
+				<nav class="nav-sidebar">
+					<ul class="nav tabs ">
+					  <li class="active"><a href="#tab1" data-toggle="tab">Staples</a></li>
+					  <li class=""><a href="#tab2" data-toggle="tab">Snacks</a></li> 
+					  <li class=""><a href="#tab3" data-toggle="tab">Fruits & Vegetables</a></li>  
+					  <li class=""><a href="#tab4" data-toggle="tab">Breakfast & Cereal</a></li>
+					</ul>
+				</nav>
 						<div class="con-w3l wthree-of">
     {% for product in products %}
         <div class="col-md-3 pro-1">

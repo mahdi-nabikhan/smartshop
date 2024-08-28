@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.db.models import F
+from django.db.models import F, Q
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import DetailView, DeleteView, UpdateView, TemplateView, ListView
@@ -399,8 +399,6 @@ class ProductsTopPrice(View):
 
 from django.db.models import Avg
 
-from django.db.models import Avg
-
 
 class ProductsTopRate(View):
     def get(self, request, id):
@@ -408,3 +406,17 @@ class ProductsTopRate(View):
         products = Product.objects.filter(store=store).annotate(average_rate=Avg('product_rate__rate')).order_by(
             '-average_rate')
         return render(request, 'pages/product_top_rate.html', {'products': products, 'store': store})
+
+
+from django.views import View
+from django.shortcuts import render
+from django.db.models import Count
+
+
+class ProductsTopSales(View):
+    def get(self, request, id):
+        store = Store.objects.get(id=id)
+
+        products = Product.objects.filter(store=store).annotate(
+            total_sales=Count('order_product__id', filter=Q(order_product__processed=True))).order_by('-total_sales')
+        return render(request, 'pages/product_top_sales.html', {'products': products, 'store': store})

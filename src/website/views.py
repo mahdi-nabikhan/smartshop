@@ -191,6 +191,25 @@ class TopRatedStoresView(ListView):
     paginate_by = 4
 
     def get_queryset(self):
-
         print(Store.objects.annotate(total_rate=Sum('store_rate__rate')).order_by('-total_rate'))
         return Store.objects.annotate(total_rate=Sum('store_rate__rate')).order_by('-total_rate')
+
+
+
+from django.db.models import Count
+
+
+class TopSellingStoresView(ListView):
+    model = Store
+    template_name = 'pages/top_selling_stores.html'
+    context_object_name = 'shop_list'
+
+    def get_queryset(self):
+        processed_orders = OrderDetail.objects.filter(processed=True)
+
+        store_sales = processed_orders.values('product__store').annotate(total_sales=Count('id')).order_by(
+            '-total_sales')
+
+        top_stores = Store.objects.filter(id__in=[store['product__store'] for store in store_sales])
+
+        return top_stores

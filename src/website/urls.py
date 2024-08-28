@@ -9,5 +9,6 @@ urlpatterns = [
     path('search_products/',Search.as_view(),name='search_products'),
     path('store_search/',SearchStore.as_view(),name='store_search'),
     path('top_rate_store/',TopRatedStoresView.as_view(),name='top_rate_store'),
+path('top-selling-stores/', TopSellingStoresView.as_view(), name='top_selling_stores')
 
 ]
