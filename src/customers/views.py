@@ -94,24 +94,30 @@ class SeeOrderDetailComformed(ListView):
 
 
 class OrderDetailDetailView(View):
-
     template_name = 'customer/seeorderdetails.html'
-
 
     def get(self, request, pk):
         orders = OrderDetail.objects.get(pk=pk)
         form = AddRatingForm()
-        context = {'orders': orders, 'form': form}
+        add_comment = AddCommentForm()
+        context = {'orders': orders, 'form': form, 'add_comment': add_comment}
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
         orders = OrderDetail.objects.get(pk=pk)
         form = AddRatingForm(request.POST)
+        add_comment = AddCommentForm(request.POST)
         if form.is_valid():
             rating = form.save(commit=False)
             rating.product = orders.product
             rating.save()
-        context = {'orders': orders, 'form': form}
+        if add_comment.is_valid():
+            comment = add_comment.save(commit=False)
+            comment.product = orders.product
+            comment.user=Customer.objects.get(id=request.user.id)
+            comment.save()
+
+        context = {'orders': orders, 'form': form, 'add_comment': add_comment}
         return render(request, template_name=self.template_name, context=context)
 
 
@@ -120,6 +126,7 @@ class CartDetails(View):
         cart = Cart.objects.get(id=id, status=True)
         print(cart)
         order = OrderDetail.objects.filter(cart=cart)
+
         print(order)
         cart2 = order.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']

@@ -10,6 +10,7 @@
             <th>Price</th>
             <th>Total</th>
             <th>Status</th>
+            <th> Details</th>
         </tr>
     </thead>
     <tbody>
@@ -21,7 +22,9 @@
             <td>{{ order.product.price }}</td>
             <td>{{ order.total_price}}</td>
             <td>{{ order.get_status_display }}</td>
+            <td><a href="{% url 'customers:detail_detail' order.pk %}"> details</a></td>
         </tr>
+            
         {% endfor %}
     <p> total price : {{ total_price }}</p>
       

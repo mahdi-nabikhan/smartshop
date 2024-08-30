@@ -179,8 +179,11 @@ class SearchStore(ListView):
     def get_context_data(self, **kwargs):
         context = super(SearchStore, self).get_context_data(**kwargs)
         store_name = self.request.GET.get('q')
+
         all_store = self.get_queryset().filter(name__icontains=store_name)
+        products = Product.objects.filter(name__icontains=store_name)
         context["shop_list"] = all_store
+        context["products"] = products
         context["not_found"] = f'{store_name} does not exist.'
         return context
 
