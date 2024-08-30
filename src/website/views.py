@@ -195,7 +195,6 @@ class TopRatedStoresView(ListView):
         return Store.objects.annotate(total_rate=Sum('store_rate__rate')).order_by('-total_rate')
 
 
-
 from django.db.models import Count
 
 
@@ -213,3 +212,10 @@ class TopSellingStoresView(ListView):
         top_stores = Store.objects.filter(id__in=[store['product__store'] for store in store_sales])
 
         return top_stores
+
+
+class ShopList(ListView):
+    template_name = 'pages/shop_list.html'
+    queryset = Store.objects.all()
+    context_object_name = 'shop_list'
+    paginate_by = 5
