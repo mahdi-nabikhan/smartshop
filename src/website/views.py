@@ -1,5 +1,6 @@
 import http
 
+from django.db.models import Count, Max
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
@@ -188,31 +189,31 @@ class SearchStore(ListView):
         return context
 
 
-class TopRatedStoresView(ListView):
-    template_name = 'pages/top_rated_stores.html'
+class TopRatedAndSellingStoresView(ListView):
+    template_name = 'pages/top_selling_stores.html'
     context_object_name = 'shop_list'
     paginate_by = 4
 
     def get_queryset(self):
-        print(Store.objects.annotate(total_rate=Sum('store_rate__rate')).order_by('-total_rate'))
-        return Store.objects.annotate(total_rate=Sum('store_rate__rate')).order_by('-total_rate')
+        filter_type = self.request.GET.get('filter')
 
-
-from django.db.models import Count
-
-
-class TopSellingStoresView(ListView):
-    model = Store
-    template_name = 'pages/top_selling_stores.html'
-    context_object_name = 'shop_list'
-
-    def get_queryset(self):
         processed_orders = OrderDetail.objects.filter(processed=True)
-
         store_sales = processed_orders.values('product__store').annotate(total_sales=Count('id')).order_by(
             '-total_sales')
-
         top_stores = Store.objects.filter(id__in=[store['product__store'] for store in store_sales])
+
+        top_stores = top_stores.annotate(
+            total_rate=Sum('store_rate__rate'),
+            total_sales=Count('product_store__order_product__id'),
+            max_price=Max('product_store__price')
+        )
+
+        if filter_type == 'highest_rate':
+            top_stores = top_stores.order_by('-total_rate')
+        elif filter_type == 'highest_sales':
+            top_stores = top_stores.order_by('-total_sales')
+        elif filter_type == 'highest_price':
+            top_stores = top_stores.order_by('-max_price')
 
         return top_stores
 

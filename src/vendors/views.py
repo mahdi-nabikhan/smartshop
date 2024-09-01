@@ -388,35 +388,26 @@ class OrderDetailUpdated(UpdateView):
     template_name = 'admins/order_update.html'
 
 
-class ProductsTopPrice(View):
-
-    def get(self, request, id):
-        store = Store.objects.get(id=id)
-        products = Product.objects.filter(store=store).order_by('-price')
-        context = {'products': products, 'store': store}
-        return render(request, template_name='pages/product_top_price.html', context=context)
-
-
-from django.db.models import Avg
-
-
-class ProductsTopRate(View):
-    def get(self, request, id):
-        store = Store.objects.get(id=id)
-        products = Product.objects.filter(store=store).annotate(average_rate=Avg('product_rate__rate')).order_by(
-            '-average_rate')
-        return render(request, 'pages/product_top_rate.html', {'products': products, 'store': store})
-
-
 from django.views import View
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Avg, Count, Q
 
+class ProductsFilterView(View):
+    def get(self, request):
+        store_id = request.GET.get('store_id')
+        filter_type = request.GET.get('filter')
+        store = Store.objects.get(id=store_id)
 
-class ProductsTopSales(View):
-    def get(self, request, id):
-        store = Store.objects.get(id=id)
+        products = Product.objects.filter(store=store)
 
-        products = Product.objects.filter(store=store).annotate(
-            total_sales=Count('order_product__id', filter=Q(order_product__processed=True))).order_by('-total_sales')
-        return render(request, 'pages/product_top_sales.html', {'products': products, 'store': store})
+        if filter_type == 'top_price':
+            products = products.order_by('-price')
+        elif filter_type == 'top_rate':
+            products = products.annotate(average_rate=Avg('product_rate__rate')).order_by('-average_rate')
+        elif filter_type == 'top_sales':
+            products = products.annotate(
+                total_sales=Count('order_product__id', filter=Q(order_product__processed=True))
+            ).order_by('-total_sales')
+
+        context = {'products': products, 'store': store}
+        return render(request, 'pages/product_top_rate.html', context=context)

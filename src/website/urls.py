@@ -8,8 +8,7 @@ urlpatterns = [
     path('product_rate/<int:id>/',AddProductRate.as_view(),name='product_rate'),
     path('search_products/',Search.as_view(),name='search_products'),
     path('store_search/',SearchStore.as_view(),name='store_search'),
-    path('top_rate_store/',TopRatedStoresView.as_view(),name='top_rate_store'),
-    path('top-selling-stores/', TopSellingStoresView.as_view(), name='top_selling_stores'),
+    path('top-rated-and-selling-stores/', TopRatedAndSellingStoresView.as_view(), name='top_rated_and_selling_stores'),
     path('all_shops/',ShopList.as_view(),name='all_shops'),
 
 ]

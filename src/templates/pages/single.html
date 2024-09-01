@@ -178,9 +178,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 		</div>
 			<div class="tab-head ">
-				<a href="{% url 'vendors:top_price_products' store.id %}">Top Price</a>
-                <a href="{% url 'vendors:top_rate_products' store.id %}"> Top Rate</a>
-                <a href="{% url 'vendors:top_selas_products' store.id %}"> Top Selas</a>
+				<div>
+    <a href="{% url 'vendors:filter_products' %}?store_id={{ store.id }}&filter=top_price">Top Price1</a>
+    <a href="{% url 'vendors:filter_products' %}?store_id={{ store.id }}&filter=top_rate">Top Rate1</a>
+    <a href="{% url 'vendors:filter_products' %}?store_id={{ store.id }}&filter=top_sales">Top Sales1</a>
+</div>
+
 						<div class="con-w3l wthree-of">
     {% for product in products %}
         <div class="col-md-3 pro-1">

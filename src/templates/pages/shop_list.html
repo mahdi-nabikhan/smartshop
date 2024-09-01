@@ -9,15 +9,15 @@
 <div data-vide-bg={% static  "video/video"%}>
     <div class="container">
 		<div class="banner-info">
-			<h3>It is a long established fact that a reader will be distracted by 
-			the readable </h3>	
+			<h3>It is a long established fact that a reader will be distracted by
+			the readable </h3>
 			<div class="search-form">
 				<form action="{% url 'website:store_search' %}" method="get">
 					<input type="text" placeholder="Search..." name="q">
 					<input type="submit" value=" " >
 				</form>
-			</div>		
-		</div>	
+			</div>
+		</div>
     </div>
 </div>
 
@@ -36,24 +36,28 @@
 			</div>
 		</div>
 			<div class="tab-head ">
-            <a href="{% url 'website:top_rate_store' %}"> Top Rate</a>
-                <a href="{% url 'website:top_selling_stores' %}"> Top Selas</a>
+           <form method="get" action="{% url 'website:top_rated_and_selling_stores' %}">
+    <button type="submit" name="filter" value="highest_rate">بالاترین امتیاز</button>
+    <button type="submit" name="filter" value="highest_sales">بالاترین تعداد فروش</button>
+    <button type="submit" name="filter" value="highest_price">بالاترین قیمت</button>
+</form>
 				<div class=" tab-content tab-content-t ">
 					<div class="tab-pane active text-style" id="tab1">
 						<div class=" con-w3l">
 							{% for i in shop_list %}
 							<div class="col-md-3 m-wthree" >
 								<div class="col-m" style="  margin-bottom: 20px">
-									
-										<img src={{ i.image.url }}  alt="" class="img-responsive">
+
 										
-									
+										<img src={{ i.image.url }}  alt="" class="img-responsive" style="height: 200px ; width: 250px">
+
+
 									<div class="mid-1">
 										<div class="women">
 											<h6><a href="single.html">{{ i.name }}</a>(5 kg)</h6>
 										</div>
 										<div class="mid-2">
-											
+
 											  <div class="block">
 												<div class="starbox small ghosting"> </div>
 											</div>
@@ -66,7 +70,7 @@
 								</div>
 							</div>
                             {% endfor %}
-                        
+
 							<div class="clearfix "></div>
                   {% if is_paginated %}
   <nav aria-label="Page navigation example">
@@ -196,7 +200,7 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
-						 </div>		  
+						 </div>
 					</div>
 					<div class="tab-pane  text-style" id="tab3">
 						<div class=" con-w3l">
@@ -293,7 +297,7 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
-						 </div>		  
+						 </div>
 					</div>
 					<div class="tab-pane text-style" id="tab4">
 							<div class=" con-w3l">
@@ -394,7 +398,7 @@
 					</div>
 				</div>
 			</div>
-		
+
 	</div>
 	</div>
 	</div>
@@ -402,7 +406,7 @@
 <!--content-->
 <div class="content-mid">
 	<div class="container">
-		
+
 		<div class="col-md-4 m-w3ls">
 			<div class="col-md1 ">
 				<a href="kitchen.html">
@@ -434,7 +438,7 @@
 					<img src={% static  "images/co2.jpg"%};  class="img-responsive img1" alt="">
 					<div class="big-sale2">
 						<h3>Cooking <span>Oil</span></h3>
-						<p>It is a long established fact that a reader </p>		
+						<p>It is a long established fact that a reader </p>
 					</div>
 				</a>
 			</div>
@@ -464,18 +468,18 @@
       <div class="carousel-inner" role="listbox">
         <div class="item active">
          <a href="{% static 'pages/kitchen.html' %}"> <img class="first-slide" src={% static "images/ba.jpg" %}  slide"></a>
-       
+
         </div>
         <div class="item">
          <a href="care.html"> <img class="second-slide " src={% static "images/ba1.jpg"%} alt="Second slide"></a>
-         
+
         </div>
         <div class="item">
           <a href="hold.html"><img class="third-slide " src={% static "images/ba2.jpg"%} alt="Third slide"></a>
-          
+
         </div>
       </div>
-    
+
     </div><!-- /.carousel -->
 
 <!--content-->
@@ -492,9 +496,9 @@
 			containerID: 'toTop', // fading element id
 			containerHoverID: 'toTopHover', // fading element hover id
 			scrollSpeed: 1200,
-			easingType: 'linear' 
+			easingType: 'linear'
 			};
-		*/								
+		*/
 		$().UItoTop({ easingType: 'easeOutQuart' });
 		});
 	</script>
