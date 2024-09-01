@@ -60,21 +60,29 @@
       </div>
       <div class="col-lg-8">
         <div class="card mb-4">
-          <div class="card-body">
-          <p class="mb-0">Comment</p>
-            {% for m in comment %}
-            <div class="row">
-              <div class="col-sm-3">
-                
-              </div>
-              <div class="col">
-                <p class="text-muted ">description : {{ m.descriptions }} </p>
-                  <p class ='text-muted '>product : {{ m.product.name}}</p>
-              </div>
-            </div>
-              {% endfor %}
-          </div>
-        </div>
+  <div class="card-body">
+    <p class="mb-0">Comment</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Description</th>
+          <th scope="col">Status</th>
+          <th scope="col">Product</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in comment %}
+        <tr>
+          <td>{{ m.descriptions }}</td>
+          <td>{{ m.status }}</td>
+          <td>{{ m.product.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
         <div class="row">
           <div class="col-md-12">
             <div class="card mb-4 mb-md-0">

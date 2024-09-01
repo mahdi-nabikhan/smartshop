@@ -21,7 +21,12 @@ class Address(models.Model):
 
 
 class Comments(models.Model):
+    class Status(models.TextChoices):
+        pending = 'P', 'Pending'
+        confirmed = 'C', 'Confirmed'
+        rejected = 'R', 'Rejected'
     descriptions = models.TextField()
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='comment_customer')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_customer')
     parent = models.ForeignKey('self', null=True, blank=True, related_name='replay', on_delete=models.CASCADE)
+    status = models.CharField(choices=Status.choices, default=Status.pending, max_length=20)

@@ -22,6 +22,12 @@ class HomeView(ListView):
     paginate_by = 4
 
 
+class CategoryView(ListView):
+    model = Category
+    context_object_name = 'categories'
+    template_name = 'includes/header_buttens.html'
+
+
 # class ProductDetailView(View):
 #     template_name = 'pages/product_details.html'
 #
@@ -83,7 +89,7 @@ class ProductDetailView(View):
 
     def get(self, request, id):
         product = Product.objects.get(id=id)
-        comments = Comments.objects.filter(product=product)
+        comments = Comments.objects.filter(product=product, status='C')
         form = QuantityForm()
         add_comment = AddCommentForm()
         add_rating_form = AddRatingForm()
