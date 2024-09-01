@@ -195,6 +195,8 @@ class SearchStore(ListView):
         return context
 
 
+from django.db.models import Count, Avg, Max
+
 class TopRatedAndSellingStoresView(ListView):
     template_name = 'pages/top_selling_stores.html'
     context_object_name = 'shop_list'
@@ -204,24 +206,24 @@ class TopRatedAndSellingStoresView(ListView):
         filter_type = self.request.GET.get('filter')
 
         processed_orders = OrderDetail.objects.filter(processed=True)
-        store_sales = processed_orders.values('product__store').annotate(total_sales=Count('id')).order_by(
-            '-total_sales')
+        store_sales = processed_orders.values('product__store').annotate(total_sales=Count('id')).order_by('-total_sales')
         top_stores = Store.objects.filter(id__in=[store['product__store'] for store in store_sales])
 
         top_stores = top_stores.annotate(
-            total_rate=Sum('store_rate__rate'),
+            average_rate=Avg('product_store__product_rate__rate'),
             total_sales=Count('product_store__order_product__id'),
             max_price=Max('product_store__price')
         )
 
         if filter_type == 'highest_rate':
-            top_stores = top_stores.order_by('-total_rate')
+            top_stores = top_stores.order_by('-average_rate')
         elif filter_type == 'highest_sales':
             top_stores = top_stores.order_by('-total_sales')
         elif filter_type == 'highest_price':
             top_stores = top_stores.order_by('-max_price')
 
         return top_stores
+
 
 
 class ShopList(ListView):

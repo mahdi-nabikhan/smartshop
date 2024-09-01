@@ -1,12 +1,18 @@
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+
 from django.db.models import Sum, F
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DetailView, UpdateView, ListView
+from django.views.generic import DetailView, UpdateView, ListView, FormView
 from .models import *
 from .forms import RegisterForm, AddressForm, AddCommentForm
 from website.forms import AddRatingForm
 from orders.models import *
+from accounts.models import *
+from accounts.forms import *
 
 
 # Create your views here.
@@ -114,7 +120,7 @@ class OrderDetailDetailView(View):
         if add_comment.is_valid():
             comment = add_comment.save(commit=False)
             comment.product = orders.product
-            comment.user=Customer.objects.get(id=request.user.id)
+            comment.user = Customer.objects.get(id=request.user.id)
             comment.save()
 
         context = {'orders': orders, 'form': form, 'add_comment': add_comment}
@@ -133,3 +139,43 @@ class CartDetails(View):
         context = {'orders': order, 'total_price': total_price}
         print(context)
         return render(request, 'customer/cart_details.html', context)
+
+
+class SendVerificationCodeView(FormView):
+    template_name = 'customer/send_code2.html'
+    form_class = PhoneNumberForm
+
+    def form_valid(self, form):
+        phone_number = form.cleaned_data['phone_number']
+        user = get_object_or_404(User, phone=phone_number)
+        verification_code = VerificationCode(user=user)
+        verification_code.save()
+        print(f"Verification code for {user.phone}: {verification_code.code}")
+        return redirect('customers:verify_code', phone_number=phone_number)
+
+
+class VerifyCodeView(View):
+    def get(self, request, phone_number):
+        form = VerificationCodeForm()
+        return render(request, 'customer/verify_code2.html', {'form': form, 'phone_number': phone_number})
+
+    def post(self, request, phone_number):
+        form = VerificationCodeForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            user = get_object_or_404(User, phone=phone_number)
+            verification_code = get_object_or_404(VerificationCode, user=user, code=code)
+
+            if verification_code:
+                return redirect('customers:password_change')
+
+            else:
+                return HttpResponse('hi')
+        return render(request, 'verify_code.html', {'form': form, 'phone_number': phone_number})
+
+
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'customer/password_change.html'
+    success_url = reverse_lazy('website:landing_page')

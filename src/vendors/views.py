@@ -198,39 +198,13 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.views import View
 
+from django.db.models import Avg
+
 
 class StoreDetail(View):
     template_name = 'pages/single.html'
 
     def get(self, request, pk):
-        total_rate = None
-        store = get_object_or_404(Store, pk=pk)
-        forms = StoreRateForm()
-        products = Product.objects.filter(store=store)
-        paginator = Paginator(products, 4)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        address = StoreAddress.objects.filter(store=store)
-        rate = StoreRate.objects.filter(store=store)
-        rate2 = StoreRate.objects.filter(store=store).exists()
-        if rate2:
-            total_rate = rate.aggregate(Sum('rate'))['rate__sum'] / len(rate)
-            print('this is total rate', total_rate)
-
-        context = {
-            'store': store,
-            'products': page_obj,
-            'address': address,
-            'form': forms,
-            'total_rate': total_rate
-        }
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, pk):
-        store = Store.objects.get(pk=pk)
-        form = StoreRateForm(request.POST)
-        total_rate = None
         store = get_object_or_404(Store, pk=pk)
         products = Product.objects.filter(store=store)
         paginator = Paginator(products, 4)
@@ -238,27 +212,46 @@ class StoreDetail(View):
         page_obj = paginator.get_page(page_number)
         address = StoreAddress.objects.filter(store=store)
 
-        rate = StoreRate.objects.filter(store=store)
-        rate2 = StoreRate.objects.filter(store=store).exists()
-        if rate2:
-            total_rate = rate.aggregate(Sum('rate'))['rate__sum'] / len(rate)
-            print('this is total rate', total_rate)
 
-        print('this is rate', rate)
-        if form.is_valid():
-            print('hi')
-            rate = form.save(commit=False)
-            rate.store = store
-            rate.save()
-            return redirect('vendors:store_detail', pk=store.pk)
+        total_rate = ProductRate.objects.filter(product__store=store).aggregate(average_rate=Avg('rate'))[
+            'average_rate']
+
         context = {
             'store': store,
             'products': page_obj,
             'address': address,
-            'form': form,
             'total_rate': total_rate
         }
+
         return render(request, self.template_name, context)
+
+    # def post(self, request, pk):
+    #     store = Store.objects.get(pk=pk)
+    #
+    #     total_rate = None
+    #     store = get_object_or_404(Store, pk=pk)
+    #     products = Product.objects.filter(store=store)
+    #     paginator = Paginator(products, 4)
+    #     page_number = request.GET.get('page')
+    #     page_obj = paginator.get_page(page_number)
+    #     address = StoreAddress.objects.filter(store=store)
+    #
+    #     rate = OrderDetail.objects.filter(product__store=store)
+    #     rate2 = StoreRate.objects.filter(store=store).exists()
+    #     if rate2:
+    #         total_rate = rate.aggregate(Sum('rate'))['rate__sum'] / len(rate)
+    #         print('this is total rate', total_rate)
+    #
+    #     print('this is rate', rate)
+    #
+    #     context = {
+    #         'store': store,
+    #         'products': page_obj,
+    #         'address': address,
+    #
+    #         'total_rate': total_rate
+    #     }
+    #     return render(request, self.template_name, context)
 
 
 @method_decorator(admin_or_manager_required, name='dispatch')
