@@ -1,19 +1,16 @@
-from django.core.paginator import Paginator
-from django.db.models import F, Q
-from django.shortcuts import render, redirect
-from django.views import View
-from django.views.generic import DetailView, DeleteView, UpdateView, TemplateView, ListView
+from django.shortcuts import redirect
+from django.db.models import Count, Q
+from django.db.models import F
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from .models import Store
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic import DetailView, DeleteView, UpdateView
+
+from orders.models import *
 from website.models import *
 from .forms import *
 from .permissions import *
-from django.utils.decorators import method_decorator
-from orders.models import *
-
-from django.db.models import F
-from django.shortcuts import render
-from django.views import View
 
 
 # Create your views here.
@@ -47,42 +44,6 @@ class RegisterStores(View):
         context = {'form': form, 'store_form': store_form, 'address_form': address_form}
         return render(request, 'admins/owner_register.html', context)
 
-
-# class RegisterStoreView(View):
-#
-#     def get(self, request, id):
-#         form = RegistrationStoreForm()
-#         context = {'form': form}
-#         return render(request, 'store_register.html', context)
-#
-#     def post(self, request, id):
-#         form = RegistrationStoreForm(request.POST)
-#         user = User.objects.get(id=id)
-#         if form.is_valid():
-#             store = form.save(commit=False)
-#             store.owner = user
-#             store.save()
-#             return redirect('vendors:add_address_store', id=store.id)
-#         context = {'form': form}
-#         return render(request, 'store_register.html', context)
-#
-#
-# class StoreAddressView(View):
-#     def get(self, request, id):
-#         form = AddressStoreForm()
-#         context = {'form': form}
-#         return render(request, 'storeaddress.html', context)
-#
-#     def post(self, request, id):
-#         stores_obj = Store.objects.get(id=id)
-#         print(stores_obj)
-#         form = AddressStoreForm(request.POST)
-#         if form.is_valid():
-#             stores = form.save(commit=False)
-#             stores.store = stores_obj
-#             stores.save()
-#             return redirect('website:landing_page')
-#         return render(request, 'storeaddress.html', {'form': form})
 
 @method_decorator(is_manager, name='dispatch')
 class AdminRegisterStore(View):
@@ -212,7 +173,6 @@ class StoreDetail(View):
         page_obj = paginator.get_page(page_number)
         address = StoreAddress.objects.filter(store=store)
 
-
         total_rate = ProductRate.objects.filter(product__store=store).aggregate(average_rate=Avg('rate'))[
             'average_rate']
 
@@ -224,34 +184,6 @@ class StoreDetail(View):
         }
 
         return render(request, self.template_name, context)
-
-    # def post(self, request, pk):
-    #     store = Store.objects.get(pk=pk)
-    #
-    #     total_rate = None
-    #     store = get_object_or_404(Store, pk=pk)
-    #     products = Product.objects.filter(store=store)
-    #     paginator = Paginator(products, 4)
-    #     page_number = request.GET.get('page')
-    #     page_obj = paginator.get_page(page_number)
-    #     address = StoreAddress.objects.filter(store=store)
-    #
-    #     rate = OrderDetail.objects.filter(product__store=store)
-    #     rate2 = StoreRate.objects.filter(store=store).exists()
-    #     if rate2:
-    #         total_rate = rate.aggregate(Sum('rate'))['rate__sum'] / len(rate)
-    #         print('this is total rate', total_rate)
-    #
-    #     print('this is rate', rate)
-    #
-    #     context = {
-    #         'store': store,
-    #         'products': page_obj,
-    #         'address': address,
-    #
-    #         'total_rate': total_rate
-    #     }
-    #     return render(request, self.template_name, context)
 
 
 @method_decorator(admin_or_manager_required, name='dispatch')
@@ -319,7 +251,6 @@ class RegisterOperator(View):
         context = {'form': form}
         return render(request, 'admins/operator_register.html', context)
 
-
 @method_decorator(is_manager, name='dispatch')
 class AdminListView(View):
     def get(self, request, id):
@@ -342,14 +273,14 @@ class OperatorListView(View):
         store = Store.objects.get(id=id)
         admin = Operator.objects.filter(store=store)
         context = {'admin': admin}
-        return render(request, 'admins/admin_list.html', context)
+        return render(request, 'admins/operator_list.html', context)
 
 
 @method_decorator(is_manager, name='dispatch')
 class DeleteOperatorView(DeleteView):
     model = Operator
-    success_url = reverse_lazy('dashboards:admin_panel')
     template_name = 'admins/delete_discount.html'
+    success_url = reverse_lazy('dashboards:admin_panel')
 
 
 # views.py
@@ -380,10 +311,6 @@ class OrderDetailUpdated(UpdateView):
     context_object_name = 'forms'
     template_name = 'admins/order_update.html'
 
-
-from django.views import View
-from django.shortcuts import render
-from django.db.models import Avg, Count, Q
 
 class ProductsFilterView(View):
     def get(self, request):

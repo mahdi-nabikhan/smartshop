@@ -14,14 +14,14 @@
 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">Register</div>
+                            <div class="card-header">Edit address</div>
                             <div class="card-body">
 
                                 <form class="form-horizontal" method="post" action="#">
                                     {% csrf_token  %}
                                     {{ form.as_p}}
                                    
-                                     <input type="submit" class="btn btn-primary btn-lg btn-block login-button" value="Register">
+                                     <input type="submit" class="btn btn-primary btn-lg btn-block login-button" value="Edit">
                                    
                                 </form>
                             </div>
