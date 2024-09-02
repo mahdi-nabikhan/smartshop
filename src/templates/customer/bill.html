@@ -37,16 +37,14 @@
                 <p>{{ order.product.name }}</p>
                 <p>Quantity: {{ order.quantity }}</p>
                 <p>Price: {{ order.product.price }}</p>
+                <p>Price After Discount: {{ order.product.price_after}}</p>
                 <p>Total: {{ order.total_price }}</p>
                 <p>Status: {{ order.get_status_display }}</p>
-               
             </div>
         </div>
         {% endfor %}
     </div>
-
     <p>Total price: {{ total_price }}</p>
-
     <div class="address-form">
         <form method="post">
             {% csrf_token %}

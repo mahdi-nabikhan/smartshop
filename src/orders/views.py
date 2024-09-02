@@ -19,17 +19,20 @@ class CreateBillView(View):
     template_name = 'customer/bill.html'
 
     def get(self, request, id):
+
         form = AddressSelectionForm(user=request.user)
         cart = Cart.objects.get(id=id)
         orders = OrderDetail.objects.filter(cart=cart,  processed=False)
         cart2 = orders.annotate(result=F('product__price') * F('quantity'))
+        cart23 = orders.annotate(result=F('product__price_after') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
+        total_price_after_discount =cart23.aggregate(total_price=Sum('result'))['total_price']
         return render(request, self.template_name,
-                      {'order_details': orders, 'form': form, 'total_price': total_price, 'cart': cart}, )
+                      {'order_details': orders, 'form': form, 'total_price': total_price, 'cart': cart,'price_after_discount':total_price_after_discount}, )
 
     def post(self, request, id):
         form = AddressSelectionForm(request.POST, user=request.user)
-        cart = Cart.objects.get(id=id)  # Assuming there's an open cart
+        cart = Cart.objects.get(id=id)
         orders = OrderDetail.objects.filter(cart=cart)
 
         if form.is_valid():
