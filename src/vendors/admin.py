@@ -30,19 +30,23 @@ class StoreInline(admin.TabularInline):
 class ManagersAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_admin')
     inlines = [AdminInline, OperatorInline,StoreInline]
+    search_fields = ('email', 'first_name', 'last_name', 'is_active', 'is_admin')
 
 
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner', 'description')
     inlines = [StoreRateInline, StoreAddressInline,OperatorInline,AdminInline]
+    search_fields = ('name', 'owner', 'description')
+
 
 
 @admin.register(Admin)
 class AdminAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name', 'store')
-
+    search_fields = ('email', 'first_name', 'last_name', 'store')
 
 @admin.register(Operator)
 class OperatorAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name', 'store')
+    search_fields = ('email', 'first_name', 'last_name', 'store')
