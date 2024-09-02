@@ -20,6 +20,9 @@ class Store(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(Managers, on_delete=models.CASCADE, related_name='store_owner')
 
+    def __str__(self):
+        return self.name
+
 
 class StoreRate(models.Model):
     rate = models.PositiveIntegerField()
@@ -34,6 +37,9 @@ class StoreRate(models.Model):
         total = StoreRate.objects.filter(store=self.store).aggregate(total=Sum('rate'))['total']
         return total
 
+    def __str__(self):
+        return f'{self.store} {self.rate}'
+
 
 class StoreAddress(models.Model):
     country = models.CharField(max_length=255)
@@ -41,12 +47,21 @@ class StoreAddress(models.Model):
     street = models.CharField(max_length=250)
     store = models.OneToOneField(Store, on_delete=models.CASCADE, related_name='store_address')
 
+    def __str__(self):
+        return f'{self.country} {self.city} {self.street} {self.store}'
+
 
 class Admin(User):
     is_admins = models.BooleanField(default=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='my_admin')
 
+    def __str__(self):
+        return f'{self.store} {self.first_name}'
+
 
 class Operator(User):
     is_operator = models.BooleanField(default=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='operator')
+
+    def __str__(self):
+        return f'{self.store} {self.first_name}'

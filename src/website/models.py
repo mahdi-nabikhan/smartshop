@@ -1,5 +1,6 @@
 from django.db import models
 from vendors.models import Store
+from django.db.models import Sum
 
 
 # Create your models here.
@@ -17,6 +18,9 @@ class Discount(models.Model):
 
     discount_type = models.CharField(max_length=250, choices=DiscountType.choices)
     value = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.discount_type}: {self.value}'
 
 
 class Product(models.Model):
@@ -43,9 +47,6 @@ class ProductImages(models.Model):
         return f'{self.title} {self.product.name}'
 
 
-from django.db.models import Sum
-
-
 class ProductRate(models.Model):
     rate = models.PositiveIntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_rate')
@@ -58,3 +59,6 @@ class ProductRate(models.Model):
     def get_total_rate(self):
         total = ProductRate.objects.filter(product=self.product).aggregate(total=Sum('rate'))['total']
         return total
+
+    def __str__(self):
+        return f'{self.product} {self.rate}'

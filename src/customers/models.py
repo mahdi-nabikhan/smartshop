@@ -9,6 +9,9 @@ from website.models import Product
 class Customer(User):
     is_customer = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class Address(models.Model):
     country = models.CharField(max_length=255)
@@ -25,8 +28,12 @@ class Comments(models.Model):
         pending = 'P', 'Pending'
         confirmed = 'C', 'Confirmed'
         rejected = 'R', 'Rejected'
+
     descriptions = models.TextField()
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='comment_customer')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_customer')
     parent = models.ForeignKey('self', null=True, blank=True, related_name='replay', on_delete=models.CASCADE)
     status = models.CharField(choices=Status.choices, default=Status.pending, max_length=20)
+
+    def __str__(self):
+        return f"{self.user} {self.product} {self.status}"
