@@ -357,3 +357,9 @@ class ProductsComments(View):
         comments = Comments.objects.filter(product=products)
         context = {'products': products, 'comments': comments}
         return render(request,'admins/products_comments.html',context)
+class ListProductRate(View):
+    def get(self, request, id):
+        products = Product.objects.get(id=id)
+        rate=ProductRate.objects.filter(product=products)
+        context = {'products': products, 'rate': rate}
+        return render(request,template_name='admins/products rate.html',context=context)

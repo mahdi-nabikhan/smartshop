@@ -29,4 +29,5 @@ urlpatterns = [
     path('filter_products/',ProductsFilterView.as_view(),name='filter_products'),
     path('update_admin/<int:pk>/',UpdateAdmin.as_view(), name='update_admin'),
     path('update_operator/<int:pk>/',UpdateOperator.as_view(), name='update_operator'),
+    path('products_rate/<int:id>/',ListProductRate.as_view(), name='list_products_rate'),
 ]

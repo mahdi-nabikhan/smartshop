@@ -32,6 +32,7 @@
                             <h2> name {{ i.name }}</h2>
                             <p> {{ i.price }}</p>
                         <a href="{% url 'vendors:product_detail' i.id %}"> show detail</a>
+                        
                         </div>
                         {% if forloop.counter|divisibleby:4 and not forloop.last %}
                             </div><div class="row">

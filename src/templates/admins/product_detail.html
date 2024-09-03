@@ -50,6 +50,7 @@
         <a href="{% url 'vendors:add_image' products.id %}"> add image</a><br>
         <a href="{% url 'vendors:update_product' products.id %}"> edit</a><br>
         <a href="{% url 'vendors:product_comments' products.id %}"> Comments</a><br>
+        <a href="{% url 'vendors:list_products_rate' products.id %}">All Rate</a>
         {% if products.discount %}
         <a href="{% url 'vendors:update_discounts' products.discount.pk %}"> Edit Discount</a><br>
         <a href="{% url 'vendors:delete_discount' products.discount.pk %}"> Delete Discount</a><br>
