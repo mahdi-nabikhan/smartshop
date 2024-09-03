@@ -70,9 +70,8 @@ class UpdateProductForm(forms.ModelForm):
         if product.discount:
             if product.discount.discount_type == 'cash':
                 product.price_after = product.price - product.discount.value
-            elif product.discount.discount_type == 'percentage':
-                product.price_after = max(0, product.price - (product.price * (product.discount.value // 100)))
-
+            if product.discount.discount_type == 'percentage':
+                product.price_after = product.price - (product.price * (product.discount.value // 100))
         if commit:
             product.save()
         return product
@@ -121,3 +120,15 @@ class StoreRateForm(forms.ModelForm):
     class Meta:
         model = StoreRate
         fields = ('rate',)
+
+
+class UpdateAdminForm(forms.ModelForm):
+    class Meta:
+        model = Admin
+        fields = ['first_name', 'last_name', 'email', 'phone']
+
+
+class UpdateOperatorForm(forms.ModelForm):
+    class Meta:
+        model = Operator
+        fields = ['first_name', 'last_name', 'email', 'phone']

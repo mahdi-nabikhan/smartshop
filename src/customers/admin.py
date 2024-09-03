@@ -1,5 +1,8 @@
 from django.contrib import admin
 from .models import Customer, Address, Comments
+from django.contrib import admin
+from .models import Customer, Address, Comments
+from orders.models import *
 
 
 class AddressInline(admin.TabularInline):
@@ -12,20 +15,13 @@ class CommentsInline(admin.TabularInline):
     extra = 1
 
 
-from django.contrib import admin
-from .models import Customer, Address, Comments
-from orders.models import *
-
-
 class CartInline(admin.TabularInline):
     model = Cart
     extra = 1
 
 
-
-
-
 @admin.register(Customer)
 class Customer(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_admin')
+    list_display = ('email', 'first_name', 'last_name')
     inlines = [AddressInline, CommentsInline, CartInline]
+    search_fields = ('email', 'first_name', 'last_name', 'is_active', 'is_admin')

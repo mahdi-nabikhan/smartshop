@@ -20,7 +20,8 @@
                             <p>name : {{ i.first_name }}</p>
                             <p>last name : {{ i.last_name }}</p>
                             <p> email : {{ i.email }}</p>
-                            <a href="{% url 'vendors:operator_delete' i.pk %}"> delete</a><hr>
+                            <a href="{% url 'vendors:operator_delete' i.pk %}"> delete</a><hr> 
+                        <a href="{% url 'vendors:update_operator' i.pk %}">Edit</a>
                     {% endfor %}
                 </div>
             </div>

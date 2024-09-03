@@ -25,11 +25,8 @@ urlpatterns = [
     path('order_detail_list/<int:id>/', ListOrderDetails.as_view(), name='order_detail_list'),
     path('order_detail/<int:pk>/',DetailOrderDetails.as_view(), name='order_detail'),
     path('order_updated/<int:pk>/',OrderDetailUpdated.as_view(),name='order_updated'),
-    # path('top_price_products/<int:id>/',ProductsTopRate.as_view(),name='top_price_products'),
-    # path('top_rate_products/<int:id>/',ProductsTopRate.as_view(),name='top_rate_products'),
-    # path('top_selas_products?<int:id>/',ProductsTopSales.as_view(),name='top_selas_products'),,
-    # path('store_register/<int:id>',RegisterStoreView.as_view(),name='store_register'),
-    # path('add_address_store/<int:id>',StoreAddressView.as_view(),name='add_address_store'),
+    path('product_comments/<int:id>/',ProductsComments.as_view(), name='product_comments'),
     path('filter_products/',ProductsFilterView.as_view(),name='filter_products'),
-
+    path('update_admin/<int:pk>/',UpdateAdmin.as_view(), name='update_admin'),
+    path('update_operator/<int:pk>/',UpdateOperator.as_view(), name='update_operator'),
 ]

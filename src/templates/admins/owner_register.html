@@ -198,8 +198,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<h3>Register</h3>
 					<form action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        <h3> Manager Information</h3>
 						{{ form.as_p }}
+                        <h3> Store Information</h3>
                         {{ store_form.as_p }}
+                        <h3>Address</h3>
                         {{ address_form }}
 						<input type="submit" value="Submit">
 					</form>

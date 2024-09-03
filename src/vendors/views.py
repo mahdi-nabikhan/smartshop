@@ -12,6 +12,11 @@ from website.models import *
 from .forms import *
 from .permissions import *
 
+from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
+from django.views import View
+
+from django.db.models import Avg
 
 # Create your views here.
 
@@ -155,11 +160,6 @@ class UpdateManager(UpdateView):
     template_name = 'admins/update_managers.html'
 
 
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator
-from django.views import View
-
-from django.db.models import Avg
 
 
 class StoreDetail(View):
@@ -184,6 +184,20 @@ class StoreDetail(View):
         }
 
         return render(request, self.template_name, context)
+
+@method_decorator(is_manager, name='dispatch')
+class UpdateAdmin(UpdateView):
+    model = Admin
+    form_class = UpdateAdminForm
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/update_admin.html'
+
+@method_decorator(is_manager, name='dispatch')
+class UpdateOperator(UpdateView):
+    model = Operator
+    form_class = UpdateOperatorForm
+    success_url = reverse_lazy('dashboards:admin_panel')
+    template_name = 'admins/update_operator.html'
 
 
 @method_decorator(admin_or_manager_required, name='dispatch')
@@ -215,7 +229,7 @@ class AddDiscountView(View):
                     product.save()
                     return redirect('dashboards:admin_panel')
                 elif product.discount.discount_type == 'percentage':
-                    product.price_after = max(0, product.price - (product.price * (product.discount.value // 100)))
+                    product.price_after = max(0, product.price - (product.price * (product.discount.value / 100)))
                     product.save()
                     return redirect('dashboards:admin_panel')
                 else:
@@ -250,6 +264,7 @@ class RegisterOperator(View):
             return redirect('dashboards:admin_panel')
         context = {'form': form}
         return render(request, 'admins/operator_register.html', context)
+
 
 @method_decorator(is_manager, name='dispatch')
 class AdminListView(View):
@@ -331,3 +346,14 @@ class ProductsFilterView(View):
 
         context = {'products': products, 'store': store}
         return render(request, 'pages/product_top_rate.html', context=context)
+
+
+from customers.models import Comments
+
+
+class ProductsComments(View):
+    def get(self, request, id):
+        products = Product.objects.get(id=id)
+        comments = Comments.objects.filter(product=products)
+        context = {'products': products, 'comments': comments}
+        return render(request,'admins/products_comments.html',context)

@@ -9,8 +9,7 @@ from website.models import Product
 class Customer(User):
     is_customer = models.BooleanField(default=True)
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+  
 
 
 class Address(models.Model):
