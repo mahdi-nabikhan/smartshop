@@ -15,20 +15,34 @@ from customers.models import *
 # views.py
 
 
+from django.shortcuts import render
+from django.views import View
+from django.db.models import F, Sum, Case, When, DecimalField
+from .models import Cart, OrderDetail, Bill, Product
+from .forms import AddressSelectionForm
+
+
 class CreateBillView(View):
     template_name = 'customer/bill.html'
 
     def get(self, request, id):
-
         form = AddressSelectionForm(user=request.user)
         cart = Cart.objects.get(id=id)
-        orders = OrderDetail.objects.filter(cart=cart,  processed=False)
-        cart2 = orders.annotate(result=F('product__price') * F('quantity'))
-        cart23 = orders.annotate(result=F('product__price_after') * F('quantity'))
-        total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
-        total_price_after_discount =cart23.aggregate(total_price=Sum('result'))['total_price']
+        orders = OrderDetail.objects.filter(cart=cart, processed=False)
+
+        # Calculate total price considering discounts
+        cart_with_discount = orders.annotate(
+            result=Case(
+                When(product__price_after__isnull=False, then=F('product__price_after') * F('quantity')),
+                default=F('product__price') * F('quantity'),
+                output_field=DecimalField()
+            )
+        )
+
+        total_price = cart_with_discount.aggregate(total_price=Sum('result'))['total_price']
+
         return render(request, self.template_name,
-                      {'order_details': orders, 'form': form, 'total_price': total_price, 'cart': cart,'price_after_discount':total_price_after_discount}, )
+                      {'order_details': orders, 'form': form, 'total_price': total_price, 'cart': cart}, )
 
     def post(self, request, id):
         form = AddressSelectionForm(request.POST, user=request.user)
@@ -37,7 +51,6 @@ class CreateBillView(View):
 
         if form.is_valid():
             address = form.cleaned_data['address']
-
             bill = Bill.objects.create(cart=cart, address=address)
 
         return render(request, self.template_name, {'order_details': orders, 'form': form, 'cart': cart}, )
@@ -52,7 +65,7 @@ class PeyBill(View):
         orders = OrderDetail.objects.filter(cart=cart, processed=False)
 
         orders.update(processed=True)
-        cart.status=True
+        cart.status = True
         cart.save()
         bill.status = True
         bill.save()

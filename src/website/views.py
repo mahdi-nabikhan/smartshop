@@ -220,7 +220,7 @@ class TopRatedAndSellingStoresView(ListView):
         elif filter_type == 'highest_sales':
             top_stores = top_stores.order_by('-total_sales')
         elif filter_type == 'highest_price':
-            top_stores = top_stores.order_by('-max_price')
+            top_stores =Store.objects.order_by('-created_at')
 
         return top_stores
 

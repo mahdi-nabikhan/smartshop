@@ -30,6 +30,7 @@
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>Price After Discount</th>
                         <th>Total</th>
                         <th>Status</th>
                         <th>Details</th>
@@ -41,6 +42,7 @@
                         <td>{{ order.product.name }}</td>
                         <td>{{ order.quantity }}</td>
                         <td>{{ order.product.price }}</td>
+                        <td>{{ order.product.price_after }}</td>
                         <td>{{ order.total_price }}</td>
                         <td>{{ order.get_status_display }}</td>
                         <td><a href="{% url 'customers:detail_detail' order.pk %}">details</a></td>
@@ -49,6 +51,7 @@
                 </tbody>
             </table>
             <p class="text-center">Total price: {{ total_price }}</p>
+            <p class="text-center">Total price After Discounts: {{ total_price_discount }}</p>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -25,25 +25,45 @@
     .address-form {
         margin-top: 20px;
     }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
 </style>
 
 <div class="center-content">
     <h2>Order Details</h2>
-    <div>
-        {% for order in order_details %}
-        <div class="product-container">
-            <img src="{{ order.product.image_for_product.first.product_image.url }}" class="product-image" alt="{{ order.product.name }}">
-            <div class="product-details">
-                <p>{{ order.product.name }}</p>
-                <p>Quantity: {{ order.quantity }}</p>
-                <p>Price: {{ order.product.price }}</p>
-                <p>Price After Discount: {{ order.product.price_after}}</p>
-                <p>Total: {{ order.total_price }}</p>
-                <p>Status: {{ order.get_status_display }}</p>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in order_details %}
+            <tr>
+                <td><img src="{{ order.product.image_for_product.first.product_image.url }}" class="product-image" alt="{{ order.product.name }}"></td>
+                <td>
+                    <p>{{ order.product.name }}</p>
+                    <p>Quantity: {{ order.quantity }}</p>
+                    <p>Price: {{ order.product.price }}</p>
+                    <p>Price After Discount: {{ order.product.price_after }}</p>
+                    <p>Total: {{ order.total_price }}</p>
+                    <p>Status: {{ order.get_status_display }}</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <p>Total price: {{ total_price }}</p>
     <div class="address-form">
         <form method="post">

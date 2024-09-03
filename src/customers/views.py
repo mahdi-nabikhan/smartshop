@@ -103,10 +103,13 @@ class OrderDetailDetailView(View):
     template_name = 'customer/seeorderdetails.html'
 
     def get(self, request, pk):
+        total_after_discount= None
         orders = OrderDetail.objects.get(pk=pk)
         form = AddRatingForm()
         add_comment = AddCommentForm()
-        context = {'orders': orders, 'form': form, 'add_comment': add_comment}
+        if orders.product.price_after:
+            total_after_discount = orders.product.price_after * orders.quantity
+        context = {'orders': orders, 'form': form, 'add_comment': add_comment,'total_after_discount': total_after_discount}
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
@@ -127,17 +130,29 @@ class OrderDetailDetailView(View):
         return render(request, template_name=self.template_name, context=context)
 
 
+from django.shortcuts import render
+from django.views import View
+from django.db.models import F, Sum, Case, When, DecimalField
+
+
+
 class CartDetails(View):
     def get(self, request, id):
         cart = Cart.objects.get(id=id, status=True)
-        print(cart)
         order = OrderDetail.objects.filter(cart=cart)
 
-        print(order)
-        cart2 = order.annotate(result=F('product__price') * F('quantity'))
-        total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
+        # Calculate total price considering discounts
+        cart_with_discount = order.annotate(
+            result=Case(
+                When(product__price_after__isnull=False, then=F('product__price_after') * F('quantity')),
+                default=F('product__price') * F('quantity'),
+                output_field=DecimalField()
+            )
+        )
+
+        total_price = cart_with_discount.aggregate(total_price=Sum('result'))['total_price']
+
         context = {'orders': order, 'total_price': total_price}
-        print(context)
         return render(request, 'customer/cart_details.html', context)
 
 
