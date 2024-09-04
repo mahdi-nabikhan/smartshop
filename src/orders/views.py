@@ -27,7 +27,7 @@ class CreateBillView(View):
 
     def get(self, request, id):
         form = AddressSelectionForm(user=request.user)
-        cart = Cart.objects.get(id=id)
+        cart = Cart.objects.get(id=id,status=False)
         orders = OrderDetail.objects.filter(cart=cart, processed=False)
 
         # Calculate total price considering discounts

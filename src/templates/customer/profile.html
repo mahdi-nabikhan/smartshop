@@ -93,6 +93,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>ID</th>
                         <th>Link</th>
                         <th>Date</th>
                     </tr>
@@ -101,6 +102,7 @@
                     {% for bi in bill %}
                     <tr>
                         <td>{{ forloop.counter0 }}</td>
+                        <th><p>{{bi.id}}</p></th>
                         <td><a href="{% url 'customers:cart_detail' bi.cart.id %}">bill</a></td>
                         <td>{{ bi.created_at }}</td>
                     </tr>

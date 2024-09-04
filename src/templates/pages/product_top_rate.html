@@ -170,13 +170,64 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 		</div>
 			<div class="tab-head ">
-				<nav class="nav-sidebar">
-					<ul class="nav tabs ">
-					  <li class="active"><a href="#tab1" data-toggle="tab">Staples</a></li>
-					  <li class=""><a href="#tab2" data-toggle="tab">Snacks</a></li> 
-					  <li class=""><a href="#tab3" data-toggle="tab">Fruits & Vegetables</a></li>  
-					  <li class=""><a href="#tab4" data-toggle="tab">Breakfast & Cereal</a></li>
-					</ul>
+				<div>
+    <a href="{% url 'vendors:filter_products' %}?store_id={{ store.id }}&filter=top_price">Top Price</a>
+    <a href="{% url 'vendors:filter_products' %}?store_id={{ store.id }}&filter=top_rate">Top Rate</a>
+    <a href="{% url 'vendors:filter_products' %}?store_id={{ store.id }}&filter=top_sales">Top Sales</a>
+</div>
+
+						<div class="con-w3l wthree-of">
+    {% for product in products %}
+        <div class="col-md-3 pro-1">
+            <div class="col-m">
+                <a href="#" data-toggle="modal" data-target="#myModal5" class="offer-img">
+                    <img src="{{ product.image_for_product.first.product_image.url }}" class="img-responsive" alt="{{ product.name }}">
+                    <div class="offer"><p><span>Offer</span></p></div>
+                </a>
+                <div class="mid-1">
+                    <div class="women">
+                        <h6><a href="single.html">{{ product.name }}</a>
+                    </div>
+                    <div class="mid-2">
+                        {% if product.price_after %}
+                            <p><label>price : ${{ product.price }}</label><em class="item_price">${{ product.price_after }}</em></p>
+                            {% else %}
+                            <p>price : {{ product.price }}</p>
+                        {% endif %}
+                        
+                        <div class="block">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="add">
+                        <button class="btn btn-danger my-cart-btn my-cart-b" ><a href="{% url 'website:product_detail' product.pk %}">Show details</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="clearfix"></div>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if products.has_previous %}
+            <a href="?page=1">« first</a>
+            <a href="?page={{ products.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            pages {{ products.number }} -- {{ products.paginator.num_pages }}
+        </span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">Next</a>
+            <a href="?page={{ products.paginator.num_pages }}">END »</a>
+        {% endif %}
+    </span>
+</div>
+
+					</div>
 				</nav>
 						<div class="con-w3l wthree-of">
     {% for product in products %}

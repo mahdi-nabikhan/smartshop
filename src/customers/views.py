@@ -13,6 +13,9 @@ from website.forms import AddRatingForm
 from orders.models import *
 from accounts.models import *
 from accounts.forms import *
+from django.shortcuts import render
+from django.views import View
+from django.db.models import F, Sum, Case, When, DecimalField
 
 
 # Create your views here.
@@ -103,13 +106,14 @@ class OrderDetailDetailView(View):
     template_name = 'customer/seeorderdetails.html'
 
     def get(self, request, pk):
-        total_after_discount= None
+        total_after_discount = None
         orders = OrderDetail.objects.get(pk=pk)
         form = AddRatingForm()
         add_comment = AddCommentForm()
         if orders.product.price_after:
             total_after_discount = orders.product.price_after * orders.quantity
-        context = {'orders': orders, 'form': form, 'add_comment': add_comment,'total_after_discount': total_after_discount}
+        context = {'orders': orders, 'form': form, 'add_comment': add_comment,
+                   'total_after_discount': total_after_discount}
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
@@ -128,12 +132,6 @@ class OrderDetailDetailView(View):
 
         context = {'orders': orders, 'form': form, 'add_comment': add_comment}
         return render(request, template_name=self.template_name, context=context)
-
-
-from django.shortcuts import render
-from django.views import View
-from django.db.models import F, Sum, Case, When, DecimalField
-
 
 
 class CartDetails(View):
@@ -189,8 +187,26 @@ class VerifyCodeView(View):
         return render(request, 'verify_code.html', {'form': form, 'phone_number': phone_number})
 
 
-
-
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'customer/password_change.html'
     success_url = reverse_lazy('website:landing_page')
+
+
+class AddAddressViewInBill(View):
+    template_name = 'customer/address.html'
+
+    def get(self, request, id):
+        cart=Cart.objects.get(id=id)
+        form = AddressForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, id):
+        user = Customer.objects.get(id=request.user.id)
+        cart = Cart.objects.get(id=id,status=False)
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = user
+            address.save()
+            return redirect('orders:customer_bill',id=cart.id)
+        return render(request, 'customer/address.html', {'form': form})

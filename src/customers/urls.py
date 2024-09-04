@@ -15,6 +15,7 @@ urlpatterns = [
     path('cart_details/<int:id>/',CartDetails.as_view(),name='cart_detail'),
     path('password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
     path('phone_login/', SendVerificationCodeView.as_view(), name='phone'),
-    path('verify_code/<str:phone_number>/', VerifyCodeView.as_view(), name='verify_code')
+    path('verify_code/<str:phone_number>/', VerifyCodeView.as_view(), name='verify_code'),
+    path('address_bill/<int:id>/',AddAddressViewInBill.as_view(), name='address_bill'),
 ]
 

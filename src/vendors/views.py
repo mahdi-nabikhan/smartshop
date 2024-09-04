@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import DetailView, DeleteView, UpdateView
-
+from customers.models import Comments
 from orders.models import *
 from website.models import *
 from .forms import *
@@ -348,7 +348,7 @@ class ProductsFilterView(View):
         return render(request, 'pages/product_top_rate.html', context=context)
 
 
-from customers.models import Comments
+
 
 
 class ProductsComments(View):

@@ -10,7 +10,7 @@ from customers.models import Comments, Customer
 from customers.forms import AddCommentForm
 from orders.models import *
 from .forms import *
-
+from django.db.models import Count, Avg, Max
 
 # Create your views here.
 
@@ -195,7 +195,7 @@ class SearchStore(ListView):
         return context
 
 
-from django.db.models import Count, Avg, Max
+
 
 class TopRatedAndSellingStoresView(ListView):
     template_name = 'pages/top_selling_stores.html'
@@ -230,4 +230,4 @@ class ShopList(ListView):
     template_name = 'pages/shop_list.html'
     queryset = Store.objects.all()
     context_object_name = 'shop_list'
-    paginate_by = 5
+    paginate_by = 8
