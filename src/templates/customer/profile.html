@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+<section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 p-3 mb-4">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">User</a></li>
+            <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3">{{ customer.first_name }} {{ customer.last_name }}</h5>
+            <p class="text-muted mb-1">{{ customer.email }}</p>
+            <p class="text-muted mb-4">{{ customer.phone }}</p>
+            <div class="d-flex justify-content-center mb-2">
+              <a href="{% url 'customers:customer_edit_info' customer.pk %}" type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Edit Information</a>
+                <a href="{% url 'customers:phone' %}" type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Change Password</a>
+             
+            </div>
+          </div>
+        </div>
+        <div class="card mb-4 mb-lg-0">
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush rounded-3">
+              
+              
+              
+              {% for i in addresses %}
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <div style="display: block">
+                <p class="mb-0">country : {{ i.country }}</p><br>
+                <p class="mb-0">city : {{ i.city}}</p><br>
+                <p class="mb-0">street : {{ i.street }}</p><br>
+              <a href="{% url 'customers:edit_address' i.pk %}"> edit</a><hr>
+              </div>
+                
+              </li>
+                {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card mb-4">
+  <div class="card-body">
+    <p class="mb-0">Comment</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Description</th>
+          <th scope="col">Status</th>
+          <th scope="col">Product</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in comment %}
+        <tr>
+          <td>{{ m.descriptions }}</td>
+          <td>{{ m.status }}</td>
+          <td>{{ m.product.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+        <div class="row">
+          <div class="col-md-12">
+    <div class="card mb-4 mb-md-0">
+        <div class="card-body">
+            <p class="mb-4"><span class="text-primary font-italic me-1"></span> Bills</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Link</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bi in bill %}
+                    <tr>
+                        <td>{{ forloop.counter0 }}</td>
+                        <th><p>{{bi.id}}</p></th>
+                        <td><a href="{% url 'customers:cart_detail' bi.cart.id %}">bill</a></td>
+                        <td>{{ bi.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

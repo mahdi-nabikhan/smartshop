@@ -1,0 +1,54 @@
+{% load static %}
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            <h1><a href="index.html"><b>T<br>H<br>E</b>Big Store<span>The Best Supermarket</span></a></h1>
+        </div>
+        <div class="head-t">
+            <ul class="card">
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'customers:add_address' request.user.id %}"> Add Address</a></li>
+                <li><a href="{% url 'customers:customer_profile' request.user.pk %}"><i class="fa fa-user" aria-hidden="true"></i>{{ request.user.first_name }}</a></li>
+                <li><a href="{% url 'accounts:logout' %}"><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
+                <li><a href="{% url 'orders:api:cart_items_view' %}"><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
+                {% else %}
+                <li><a href="{% url 'accounts:login' %}"><i class="fa fa-user" aria-hidden="true"></i>login</a></li>
+                <li><a href="{% url 'customers:customer_register' %}"><i class="fa fa-arrow-right" aria-hidden="true"></i>Register</a></li>
+                <li><a href="{% url 'orders:api:product_details' %}"><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
+                {% endif %}
+                <li><a href="{% url 'customers:order_details' %}"><i class="fa fa-file-text-o" aria-hidden="true"></i>Order History</a></li>
+            </ul>
+        </div>
+        <div class="header-ri">
+            <ul class="social-top">
+                <li><a href="#" class="icon facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span></span></a></li>
+                <li><a href="#" class="icon twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span></span></a></li>
+                <li><a href="#" class="icon pinterest"><i class="fa fa-pinterest-p" aria-hidden="true"></i><span></span></a></li>
+                <li><a href="#" class="icon dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i><span></span></a></li>
+            </ul>
+        </div>
+        <div class="nav-top">
+            <nav class="navbar navbar-default">
+                <div class="navbar-header nav_2">
+                    <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="{% url 'website:landing_page' %}" class="hyper"><span>Home</span></a></li>
+                        <li><a href="{% url 'website:all_shops' %}" class="hyper"><span>All Shops</span></a></li>
+                        <li><a href="#" class="hyper"><span>Hamburger Menu</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="cart">
+                <span class="fa fa-shopping-cart my-cart-icon"><span class="badge badge-notify my-cart-badge"></span></span>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

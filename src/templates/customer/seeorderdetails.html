@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div style="display: flex; margin-top: 100px">
+        <div style="flex: 1;max-width: 500px;margin-left: 150px">
+            <img src="{{ orders.product.image_for_product.first.product_image.url }}" style="  width: 100%;height: auto;"
+                 alt="{{ product.name }}">
+        </div>
+        <div style="flex: 2;padding-left: 20px;">
+            <p>name : {{ orders.product.name }}</p>
+            <p>quantity : {{ orders.quantity }}</p><br>
+            <p>price : {{ orders.product.price }}</p><br>
+            <p>price after discount: {{ orders.product.price_after }}</p><br>
+            <p>status : {{ orders.status }}</p><br>
+            <p> total price : {{ orders.total_price }}</p>
+            <p>total price after discount : {{ total_after_discount }}</p>
+            <p>{{ orders.processed }}</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="add rate">
+            </form>
+            <hr>
+             <form method="post">
+                {% csrf_token %}
+                {{ add_comment.as_p }}
+                 <div style=" display: flex ; justify-items: center">
+                <input type="submit" value="add rate"></div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

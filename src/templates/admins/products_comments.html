@@ -1,0 +1,54 @@
+{% extends 'base/admin_panel_base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+
+<div id="throbber" style="display:none; min-height:120px;"></div>
+<div id="noty-holder"></div>
+{% block content %}
+    <div id="wrapper">
+
+
+        <div id="page-wrapper">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row" id="main">
+            <div class="col-sm-12 col-md-12 well" id="content">
+                <div class="row">
+                    {% for i in comments %}
+                        <div class="col-md-3">
+                            {% with i.image_for_product.all|first as first_image %}
+                                {% if first_image %}
+                                    <img width="200px" height="200px" src="{{ first_image.product_image.url }}"
+                                         alt="{{ first_image.title }}">
+                                {% endif %}
+                            {% endwith %}
+                            <h2>Name : {{ i.product.name }}</h2>
+                            <p>Descriptions : {{ i.descriptions }}</p>
+                            <p>Status : {{ i.status }}</p>
+                        
+                        </div>
+                        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                            </div><div class="row">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+        <!-- /#page-wrapper -->
+    </div><!-- /#wrapper -->
+{% endblock content %}
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Items</title>
+    <style>
+        .cart-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
+    {% csrf_token %}
+</head>
+<body>
+
+    <h1>Cart Items</h1>
+    <div id="cart-items">
+        {% if user.is_authenticated %}
+            <!-- Cart items will be loaded from API here -->
+        {% else %}
+            {% for item in cart_items %}
+                <div class="cart-item">
+                    <h2>{{ item.product.name }}</h2>
+                    <img src="{{ item.product.image_for_product.first.product_image.url}}" alt="{{ item.product.name }}">
+                    <p>Price: {{ item.product.price }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div id="error-message"></div>
+    {% if user.is_authenticated %}
+         <a  href="{% url 'orders:customer_bill' cart.id %}">go</a> 
+        {% else %}
+       <a  href="{% url 'orders:api:login' %}">add</a> 
+        
+    {% endif %}
+    
+
+    <script>
+        $(document).ready(function () {
+            var csrftoken = Cookies.get('csrftoken');
+
+            // Function to load cart items
+            function loadCartItems() {
+                if (isUserAuthenticated()) {
+                    loadCartItemsFromAPI();
+                }
+            }
+
+            // Function to check if user is authenticated
+            function isUserAuthenticated() {
+                var isAuthenticated = false;
+                $.ajax({
+                    url: '/orders/is-authenticated/',
+                    method: 'GET',
+                    async: false,
+                    success: function (data) {
+                        isAuthenticated = data.is_authenticated;
+                    },
+                    error: function (error) {
+                        console.error('Error checking authentication status:', error.responseText);
+                    }
+                });
+                return isAuthenticated;
+            }
+
+            // Function to load cart items from API
+            function loadCartItemsFromAPI() {
+                $.ajax({
+                    url: '/orders/api/cart-items/',  // URL to APIView
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var cartItemsDiv = $('#cart-items');
+                        cartItemsDiv.empty();
+                        data.forEach(function (item) {
+                            var itemHtml = '<div id="cart-item-' + item.id + '" class="cart-item">' +
+                                '<h2>' + item.product.name + '</h2>' +
+                                '<h2>' + item.id + '</h2>' +
+                                '<img src="' + item.product.image + '" alt="' + item.product.name + '">' +
+                                '<p>Price: ' + item.product.price + '</p>' +
+                                '<p>Quantity in stock: ' + item.product.quantity_in_stock + '</p>' +
+                                '<p>Total Price : ' + item.product.price * item.quantity + '</p>' +
+                                '<p>Total Price After Discount : ' + item.product.price_after * item.quantity + '</p>' +
+                                '<p>Order Status : ' + item.status + '</p>' +
+                                
+                                
+                                
+                                
+                                '<p>Quantity : <input type="number" class="quantity-input" data-id="' + item.id + '" value="' + item.quantity + '"></p>' +
+                                '<button class="update-button" data-id="' + item.id + '">Update</button>' +
+                                '<button class="delete-button" data-id="' + item.id + '">Delete</button>' +
+                                '</div>';
+                            cartItemsDiv.append(itemHtml);
+                        });
+
+                        // Attach click event to delete buttons
+                        $('.delete-button').click(function () {
+                            var itemId = $(this).data('id');
+                            deleteCartItem(itemId);
+                        });
+
+                        // Attach click event to update buttons
+                        $('.update-button').click(function () {
+                            var itemId = $(this).data('id');
+                            var quantity = $(this).siblings('.quantity-input').val();
+                            updateCartItem(itemId, quantity);
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error fetching cart items:', error.responseText);
+                        $('#error-message').text('Error fetching cart items: ' + error.responseText);
+                    }
+                });
+            }
+
+            // Function to delete a cart item
+            function deleteCartItem(itemId) {
+                $.ajax({
+                    url: '/orders/cart-items/' + itemId + '/',  // URL to APIView
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    success: function () {
+                        console.log('Cart item deleted');
+                        // Remove the item from the DOM
+                        $('#cart-item-' + itemId).remove();
+                        $('#error-message').text('Cart item deleted successfully');
+                    },
+                    error: function (error) {
+                        console.error('Error deleting cart item:', error.responseText);
+                        $('#error-message').text('Error deleting cart item: ' + error.responseText);
+                    }
+                });
+            }
+
+            // Function to update a cart item
+            // Function to update a cart item
+$(document).on('click', '.update-button', function() {
+    var itemId = $(this).data('id');
+    var quantity = $('#cart-item-' + itemId + ' .quantity-input').val();
+    updateCartItem(itemId, quantity);
+});
+
+function updateCartItem(itemId, quantity) {
+    if (quantity <= 0) {
+        $('#error-message').text('Quantity must be a positive integer');
+        return;
+    }
+
+    $.ajax({
+        url: '/orders/cart-items/' + itemId + '/',  // URL to APIView
+        method: 'PATCH',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            quantity: quantity
+        }),
+        contentType: 'application/json',
+        success: function () {
+            console.log('Cart item updated');
+            $('#error-message').text('Cart item updated successfully');
+            // Update the quantity display in the DOM
+            $('#cart-item-' + itemId + ' .quantity-input').val(quantity);
+        },
+        error: function (error) {
+            console.error('Error updating cart item:', error.responseText);
+            $('#error-message').text('Error updating cart item: ' + error.responseText);
+        }
+    });
+}
+
+
+            // Load cart items on page load
+            loadCartItems();
+        });
+    </script>
+</body>
+</html>

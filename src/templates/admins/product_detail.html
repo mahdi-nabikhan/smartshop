@@ -1,0 +1,82 @@
+{% extends 'base/admin_panel_base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+
+<div id="throbber" style="display:none; min-height:120px;"></div>
+<div id="noty-holder"></div>
+{% block content %}
+    <div id="wrapper">
+
+
+        <div id="page-wrapper">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row" id="main">
+    <div class="col-sm-12 col-md-12 well" id="content">
+        <div class="row">
+            {% for i in products.image_for_product.all %}
+                <div class="col-md-3">
+                    <img width="200px" height="200px" src="{{ i.product_image.url }}" alt="{{ i.title }}">
+                <a href="{% url 'vendors:delete_image' i.pk %}">delete this image</a>
+                </div>
+            {% endfor %}
+        </div><p></p>
+    <p>name : {{ products.name }}</p>
+        <p>descriptions : {{ products.description }}</p>
+        <p>price:{{ products.price }}</p><hr>
+        {% if products.discount %}
+            {% if products.discount.discount_type == 'cash' %}
+                <p> discount type : {{ products.discount.discount_type }}</p>
+                <p>discount value :{{ products.discount.value }} $</p>
+                <p>price after discount : {{ products.price_after }}</p>
+                
+                {% else %}
+                <p>discount type : {{ products.discount.discount_type }}</p>
+                <p>discount value : {{ products.discount.value }}</p>
+                <p>price after discount : {{ products.price_after }}</p>
+                {% endif %}
+            {% else %}
+            <p> discount : this product not have discount</p>
+            
+        {% endif %}
+    
+        <a href="{% url 'vendors:add_image' products.id %}"> add image</a><br>
+        <a href="{% url 'vendors:update_product' products.id %}"> edit</a><br>
+        <a href="{% url 'vendors:product_comments' products.id %}"> Comments</a><br>
+        <a href="{% url 'vendors:list_products_rate' products.id %}">All Rate</a>
+        {% if products.discount %}
+        <a href="{% url 'vendors:update_discounts' products.discount.pk %}"> Edit Discount</a><br>
+        <a href="{% url 'vendors:delete_discount' products.discount.pk %}"> Delete Discount</a><br>
+            {% else %}
+            <a href="{% url 'vendors:add_discount' products.id %}"> Add Discount</a><br>
+    {% endif %}
+    
+    
+    </div>
+</div>
+
+                
+
+                       
+                    
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+        <!-- /#page-wrapper -->
+    </div><!-- /#wrapper -->
+{% endblock content %}
+</body>
+</html>
